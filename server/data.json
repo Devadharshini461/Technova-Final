@@ -1,0 +1,709 @@
+{
+  "users": [
+    {
+      "id": "u-admin-1",
+      "name": "Superintendent Administration",
+      "email": "admin@scholarships.gov.in",
+      "password": "$2b$10$LeIv0.8tsudm/rHFYlFaieb10Wi7yWKdIE6O8U46GenW4jEhflBG.",
+      "role": "admin",
+      "phone": "+91 98765 43210",
+      "department": "Central Scholarship Authority",
+      "createdAt": "2026-07-31T16:40:17.579Z"
+    },
+    {
+      "id": "u-staff-1",
+      "name": "Dr. Rajesh Sharma (Verification Officer)",
+      "email": "staff.sharma@scholarships.gov.in",
+      "password": "$2b$10$LeIv0.8tsudm/rHFYlFaieb10Wi7yWKdIE6O8U46GenW4jEhflBG.",
+      "role": "staff",
+      "phone": "+91 98123 45678",
+      "assignedCount": 4,
+      "processedCount": 18,
+      "createdAt": "2026-07-31T16:40:17.581Z"
+    },
+    {
+      "id": "u-staff-2",
+      "name": "Priya Mukherjee (Senior Inspector)",
+      "email": "staff.priya@scholarships.gov.in",
+      "password": "$2b$10$LeIv0.8tsudm/rHFYlFaieb10Wi7yWKdIE6O8U46GenW4jEhflBG.",
+      "role": "staff",
+      "phone": "+91 97111 22334",
+      "assignedCount": 2,
+      "processedCount": 24,
+      "createdAt": "2026-07-31T16:40:17.581Z"
+    },
+    {
+      "id": "u-student-1",
+      "name": "Rahul Verma",
+      "email": "rahul.verma@gmail.com",
+      "password": "$2b$10$LeIv0.8tsudm/rHFYlFaieb10Wi7yWKdIE6O8U46GenW4jEhflBG.",
+      "role": "student",
+      "phone": "+91 91234 56789",
+      "college": "Indian Institute of Technology, Delhi",
+      "course": "B.Tech Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "createdAt": "2026-07-31T16:40:17.581Z"
+    },
+    {
+      "id": "u-student-2",
+      "name": "Ananya Deshmukh",
+      "email": "ananya.d@gmail.com",
+      "password": "$2b$10$LeIv0.8tsudm/rHFYlFaieb10Wi7yWKdIE6O8U46GenW4jEhflBG.",
+      "role": "student",
+      "phone": "+91 98220 11223",
+      "college": "Delhi University (SRCC)",
+      "course": "B.Com (Hons)",
+      "year": "2nd Year",
+      "marksPercentage": 92,
+      "familyIncome": 220000,
+      "category": "General",
+      "bankDetails": {
+        "accountNo": "458901237890",
+        "ifscCode": "HDFC0000456",
+        "bankName": "HDFC Bank",
+        "accountHolder": "Ananya Deshmukh"
+      },
+      "createdAt": "2026-07-31T16:40:17.581Z"
+    }
+  ],
+  "scholarships": [
+    {
+      "id": "sch-1785517622125",
+      "title": "Community Scholarship",
+      "provider": "Central Scholarship Authority",
+      "category": "Merit-cum-Means",
+      "amount": 100000,
+      "deadline": "2026-12-31",
+      "seats": 1000,
+      "appliedCount": 1,
+      "status": "active",
+      "requiresAdminApproval": true,
+      "eligibilityRules": {
+        "minPercentage": 75,
+        "maxFamilyIncome": 300000,
+        "allowedCategories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST",
+          "EWS"
+        ],
+        "description": "Provides financial aid for deserving undergraduate students meeting academic and income thresholds."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Income Certificate",
+        "ID Proof",
+        "Bank Passbook Copy"
+      ],
+      "createdDate": "2026-07-31"
+    },
+    {
+      "id": "sch-101",
+      "title": "Reliance Foundation Undergraduate Scholarship 2026",
+      "provider": "Reliance Foundation & Ministry of Education",
+      "category": "Merit-cum-Means",
+      "amount": 200000,
+      "deadline": "2026-10-31",
+      "seats": 5000,
+      "appliedCount": 1420,
+      "status": "active",
+      "requiresAdminApproval": true,
+      "eligibilityRules": {
+        "minPercentage": 75,
+        "maxFamilyIncome": 250000,
+        "allowedCategories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST",
+          "EWS"
+        ],
+        "description": "Open for 1st, 2nd, and 3rd year undergraduate students with minimum 75% marks in 12th standard and annual family income below ₹2.5 Lakhs."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Income Certificate",
+        "ID Proof",
+        "Bank Passbook Copy"
+      ],
+      "createdDate": "2026-06-01"
+    },
+    {
+      "id": "sch-102",
+      "title": "Pragati Scholarship for Girls (Technical Education)",
+      "provider": "AICTE & Central Government",
+      "category": "Girls STEM",
+      "amount": 50000,
+      "deadline": "2026-09-15",
+      "seats": 2000,
+      "appliedCount": 891,
+      "status": "active",
+      "requiresAdminApproval": false,
+      "eligibilityRules": {
+        "minPercentage": 70,
+        "maxFamilyIncome": 800000,
+        "allowedCategories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST"
+        ],
+        "description": "Dedicated financial support for female students pursuing Degree/Diploma in engineering or technology from AICTE-approved institutions."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Income Certificate",
+        "College ID",
+        "Bank Passbook Copy"
+      ],
+      "createdDate": "2026-05-15"
+    },
+    {
+      "id": "sch-103",
+      "title": "Post-Matric National Merit Grant for SC/ST Students",
+      "provider": "Department of Social Justice & Empowerment",
+      "category": "Category Specific",
+      "amount": 75000,
+      "deadline": "2026-11-15",
+      "seats": 10000,
+      "appliedCount": 3120,
+      "status": "active",
+      "requiresAdminApproval": true,
+      "eligibilityRules": {
+        "minPercentage": 60,
+        "maxFamilyIncome": 300000,
+        "allowedCategories": [
+          "SC",
+          "ST"
+        ],
+        "description": "Post-matric assistance for SC and ST category candidates enrolled in recognized post-secondary education."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Category Certificate",
+        "Income Certificate",
+        "Bank Passbook Copy"
+      ],
+      "createdDate": "2026-04-10"
+    },
+    {
+      "id": "sch-104",
+      "title": "Buddy4Study Tech Future Innovators Award",
+      "provider": "Tech CSR Consortium",
+      "category": "Merit-cum-Means",
+      "amount": 120000,
+      "deadline": "2026-08-30",
+      "seats": 500,
+      "appliedCount": 450,
+      "status": "active",
+      "requiresAdminApproval": true,
+      "eligibilityRules": {
+        "minPercentage": 80,
+        "maxFamilyIncome": 500000,
+        "allowedCategories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST",
+          "EWS"
+        ],
+        "description": "Merit-based grant for computer science and IT engineering students demonstrating academic excellence."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Income Certificate",
+        "ID Proof"
+      ],
+      "createdDate": "2026-07-01"
+    }
+  ],
+  "applications": [
+    {
+      "id": "app-1785518001063",
+      "scholarshipId": "sch-1785517622125",
+      "scholarshipTitle": "Community Scholarship",
+      "scholarshipAmount": 100000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@gmail.com",
+      "studentPhone": "+91 98765 43210",
+      "college": "Indian Institute of Technology, Delhi",
+      "course": "B.Tech Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 33,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Prem"
+      },
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee (Senior Inspector)",
+      "status": "under_review",
+      "documents": [
+        {
+          "id": "doc-1785518001063-0",
+          "name": "Marksheet - Uploaded Copy.pdf",
+          "type": "Marksheet",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785518001063-1",
+          "name": "Income Certificate - Uploaded Copy.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785518001063-2",
+          "name": "ID Proof - Uploaded Copy.pdf",
+          "type": "ID Proof",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785518001063-3",
+          "name": "Bank Passbook Copy - Uploaded Copy.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "pending",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": false,
+        "reasons": [
+          "Academic Marks: 33% is below required minimum 75%",
+          "Annual Family Income: ₹1,80,000 is within ceiling limit ₹3,00,000",
+          "Category: Applicant category (OBC) is eligible for this scheme"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-07-31T17:13:21.063Z",
+      "updatedAt": "2026-07-31T17:13:21.063Z"
+    },
+    {
+      "id": "app-1785516996155",
+      "scholarshipId": "sch-102",
+      "scholarshipTitle": "Pragati Scholarship for Girls (Technical Education)",
+      "scholarshipAmount": 50000,
+      "requiresAdminApproval": false,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@gmail.com",
+      "studentPhone": "+91 98765 43210",
+      "college": "Indian Institute of Technology, Delhi",
+      "course": "B.Tech Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
+      "status": "rejected",
+      "documents": [
+        {
+          "id": "doc-1785516995880-0",
+          "name": "Tech stack.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785516995770-381804143.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785516995880-1",
+          "name": "SRS_Scholarship_Portal.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785516995785-591758166.pdf",
+          "status": "needs_resubmission",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785516995880-2",
+          "name": "frozen pic.jpg",
+          "type": "College ID",
+          "fileUrl": "/uploads/documents-1785516995805-283184736.jpg",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785516995880-3",
+          "name": "Frozen 2.jpg",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785516995817-986921804.jpg",
+          "status": "valid",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 88.5% meets/exceeds required minimum 70%",
+          "Annual Family Income: ₹1,80,000 is within ceiling limit ₹8,00,000",
+          "Category: Applicant category (OBC) is eligible for this scheme"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "recommend_reject",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-07-31T16:56:36.156Z",
+      "updatedAt": "2026-07-31T16:59:38.272Z"
+    },
+    {
+      "id": "app-2001",
+      "scholarshipId": "sch-101",
+      "scholarshipTitle": "Reliance Foundation Undergraduate Scholarship 2026",
+      "scholarshipAmount": 200000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@gmail.com",
+      "studentPhone": "+91 91234 56789",
+      "college": "Indian Institute of Technology, Delhi",
+      "course": "B.Tech Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma",
+      "status": "disbursed",
+      "documents": [
+        {
+          "id": "doc-1",
+          "name": "12th Marksheet & Semester Transcripts",
+          "type": "Marksheet",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-2",
+          "name": "Tahsildar Income Certificate",
+          "type": "Income Certificate",
+          "fileUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-3",
+          "name": "Aadhaar Card Copy",
+          "type": "ID Proof",
+          "fileUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-4",
+          "name": "Bank Account Passbook Front Page",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Marks 88.5% >= Min 75.0%",
+          "Family Income ₹1.8L <= Max ₹2.5L",
+          "Category OBC is eligible"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "recommend_approve",
+      "adminRemarks": "Final Executive Approval Granted",
+      "disbursementDetails": {
+        "transactionId": "TXN-NPCI-1785517353876-6714",
+        "amount": 200000,
+        "disbursedDate": "2026-07-31T17:02:33.876Z",
+        "bankAccount": "XXXXXXXX3456",
+        "ifsc": "SBIN0001234"
+      },
+      "submittedAt": "2026-07-29T16:40:17.581Z",
+      "updatedAt": "2026-07-31T17:02:33.876Z"
+    },
+    {
+      "id": "app-2002",
+      "scholarshipId": "sch-102",
+      "scholarshipTitle": "Pragati Scholarship for Girls (Technical Education)",
+      "scholarshipAmount": 50000,
+      "requiresAdminApproval": false,
+      "studentId": "u-student-2",
+      "studentName": "Ananya Deshmukh",
+      "studentEmail": "ananya.d@gmail.com",
+      "studentPhone": "+91 98220 11223",
+      "college": "Delhi University (SRCC)",
+      "course": "B.Com (Hons)",
+      "year": "2nd Year",
+      "marksPercentage": 92,
+      "familyIncome": 220000,
+      "category": "General",
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee",
+      "status": "pending_admin_approval",
+      "documents": [
+        {
+          "id": "doc-21",
+          "name": "12th Board Marksheet",
+          "type": "Marksheet",
+          "fileUrl": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": "Verified against Digilocker"
+        },
+        {
+          "id": "doc-22",
+          "name": "Annual Family Income Statement",
+          "type": "Income Certificate",
+          "fileUrl": "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": "Valid government stamp verified"
+        },
+        {
+          "id": "doc-23",
+          "name": "College ID Card",
+          "type": "College ID",
+          "fileUrl": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60",
+          "status": "valid",
+          "remark": "Active enrollment confirmed"
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Marks 92.0% >= Min 70.0%",
+          "Family Income ₹2.2L <= Max ₹8.0L"
+        ]
+      },
+      "staffRemarks": "Applicant profile authentic. High academic score. Strongly recommended.",
+      "staffRecommendation": "recommend_approve",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-07-27T16:40:17.582Z",
+      "updatedAt": "2026-07-31T04:40:17.582Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "log-1785518001063",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785518001063 for scheme \"Community Scholarship\"",
+      "timestamp": "2026-07-31T17:13:21.063Z"
+    },
+    {
+      "id": "log-1785517622125",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "SCHEME_CREATE",
+      "details": "Created scholarship scheme \"Community Scholarship\" (Grant: ₹1,00,000)",
+      "timestamp": "2026-07-31T17:07:02.126Z"
+    },
+    {
+      "id": "log-1785517353876",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "FUND_DISBURSEMENT",
+      "details": "Disbursed ₹2,00,000 to Rahul Verma for App app-2001. Txn Ref: TXN-NPCI-1785517353876-6714",
+      "timestamp": "2026-07-31T17:02:33.876Z"
+    },
+    {
+      "id": "log-1785517332920",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "ADMIN_APPROVE",
+      "details": "Admin approved application app-2001 (Reliance Foundation Undergraduate Scholarship 2026) for Rahul Verma",
+      "timestamp": "2026-07-31T17:02:12.920Z"
+    },
+    {
+      "id": "log-1785517211480",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-2001 (Rahul Verma). Routed to status: pending_admin_approval",
+      "timestamp": "2026-07-31T17:00:11.480Z"
+    },
+    {
+      "id": "log-1785517178272",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended REJECT for Application app-1785516996155 (Rahul Verma). Routed to status: rejected",
+      "timestamp": "2026-07-31T16:59:38.272Z"
+    },
+    {
+      "id": "log-1785517135140",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-1785516996155 (Rahul Verma). Routed to status: approved",
+      "timestamp": "2026-07-31T16:58:55.140Z"
+    },
+    {
+      "id": "log-1785517022592",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended REJECT for Application app-1785516996155 (Rahul Verma). Routed to status: rejected",
+      "timestamp": "2026-07-31T16:57:02.592Z"
+    },
+    {
+      "id": "log-1785516996158",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785516996155 for scheme \"Pragati Scholarship for Girls (Technical Education)\"",
+      "timestamp": "2026-07-31T16:56:36.158Z"
+    },
+    {
+      "id": "log-1",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "SCHEME_CREATE",
+      "details": "Created new scheme: Reliance Foundation Undergraduate Scholarship 2026",
+      "timestamp": "2026-07-26T16:40:17.582Z"
+    },
+    {
+      "id": "log-2",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-2001 for Reliance Foundation Undergraduate Scholarship 2026",
+      "timestamp": "2026-07-29T16:40:17.582Z"
+    },
+    {
+      "id": "log-3",
+      "actorName": "Priya Mukherjee",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Recommended Approval for app-2002 (Ananya Deshmukh)",
+      "timestamp": "2026-07-31T04:40:17.582Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif-1785518001063",
+      "userId": "u-student-1",
+      "title": "Application Submitted",
+      "message": "Your application (app-1785518001063) for Community Scholarship was received and assigned to Priya Mukherjee (Senior Inspector) for verification.",
+      "isRead": false,
+      "createdAt": "2026-07-31T17:13:21.063Z"
+    },
+    {
+      "id": "notif-1785517353876",
+      "userId": "u-student-1",
+      "title": "Funds Disbursed! 💰",
+      "message": "Scholarship grant of ₹2,00,000 has been transferred to your bank account (Registered Bank). Txn ID: TXN-NPCI-1785517353876-6714",
+      "isRead": false,
+      "createdAt": "2026-07-31T17:02:33.876Z"
+    },
+    {
+      "id": "notif-1785517332920",
+      "userId": "u-student-1",
+      "title": "Scholarship Approved! 🎉",
+      "message": "Congratulations! Your scholarship application app-2001 for Reliance Foundation Undergraduate Scholarship 2026 has received final Admin Approval!",
+      "isRead": false,
+      "createdAt": "2026-07-31T17:02:12.920Z"
+    },
+    {
+      "id": "notif-1785517211480",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-2001. Status updated to: pending admin_approval.",
+      "isRead": false,
+      "createdAt": "2026-07-31T17:00:11.480Z"
+    },
+    {
+      "id": "notif-1785517178272",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785516996155. Status updated to: rejected.",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:59:38.272Z"
+    },
+    {
+      "id": "notif-1785517148499",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785516996155 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:59:08.499Z"
+    },
+    {
+      "id": "notif-1785517135140",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785516996155. Status updated to: approved.",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:58:55.140Z"
+    },
+    {
+      "id": "notif-1785517045804",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785516996155 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:57:25.804Z"
+    },
+    {
+      "id": "notif-1785517022592",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785516996155. Status updated to: rejected.",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:57:02.592Z"
+    },
+    {
+      "id": "notif-1785516996158",
+      "userId": "u-student-1",
+      "title": "Application Submitted",
+      "message": "Your application (app-1785516996155) for Pragati Scholarship for Girls (Technical Education) was received and assigned to Dr. Rajesh Sharma (Verification Officer) for verification.",
+      "isRead": false,
+      "createdAt": "2026-07-31T16:56:36.158Z"
+    },
+    {
+      "id": "notif-1",
+      "userId": "u-student-1",
+      "title": "Application Submitted Successfully",
+      "message": "Your application app-2001 for Reliance Foundation Undergraduate Scholarship 2026 is currently under staff review.",
+      "isRead": true,
+      "createdAt": "2026-07-29T16:40:17.582Z"
+    },
+    {
+      "id": "notif-2",
+      "userId": "u-student-2",
+      "title": "Verification Complete",
+      "message": "Your documents have been verified by Staff Priya Mukherjee. Application is pending final Admin clearance.",
+      "isRead": false,
+      "createdAt": "2026-07-31T04:40:17.582Z"
+    }
+  ]
+}
