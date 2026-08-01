@@ -9,7 +9,8 @@
     "client": "vite client",
     "build": "vite build client",
     "vercel-build": "vite build client",
-    "preview": "vite preview client"
+    "preview": "vite preview client",
+    "seed:mongo": "node server/migrateToMongo.js"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",
