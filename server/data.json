@@ -84,7 +84,7 @@
       "amount": 100000,
       "deadline": "2026-08-19",
       "seats": 1000,
-      "appliedCount": 1,
+      "appliedCount": 2,
       "status": "active",
       "requiresAdminApproval": true,
       "assignedStaffId": "u-staff-1",
@@ -271,6 +271,80 @@
     }
   ],
   "applications": [
+    {
+      "id": "app-1785571464197",
+      "scholarshipId": "sch-1785566631133",
+      "scholarshipTitle": "CGPA",
+      "scholarshipAmount": 100000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 18000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
+      "status": "under_review",
+      "documents": [
+        {
+          "id": "doc-1785571464112-0",
+          "name": "student dashboard.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785571463790-904873498.pdf",
+          "status": "invalid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785571464112-1",
+          "name": "Admin.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785571463864-378694792.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785571464112-2",
+          "name": "staff.pdf",
+          "type": "ID Proof",
+          "fileUrl": "/uploads/documents-1785571463986-46027607.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785571464112-3",
+          "name": "MODULES.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785571464049-945701551.pdf",
+          "status": "pending",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 88.5% meets minimum 75%",
+          "Annual Family Income: ₹18,000 is within limit ₹96,000",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-08-01T08:04:24.197Z",
+      "updatedAt": "2026-08-01T08:07:59.600Z"
+    },
     {
       "id": "app-1785566700455",
       "scholarshipId": "sch-1785566631133",
@@ -777,6 +851,14 @@
   ],
   "auditLogs": [
     {
+      "id": "log-1785571464197",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785571464197 for \"CGPA\" (Assigned to Staff: Dr. Rajesh Sharma (Verification Officer))",
+      "timestamp": "2026-08-01T08:04:24.197Z"
+    },
+    {
       "id": "log-1785566874433",
       "actorName": "Superintendent Administration",
       "actorRole": "admin",
@@ -922,6 +1004,54 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1785571679600",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:07:59.600Z"
+    },
+    {
+      "id": "notif-1785571669858",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:07:49.858Z"
+    },
+    {
+      "id": "notif-1785571636442",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:07:16.442Z"
+    },
+    {
+      "id": "notif-1785571629020",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:07:09.020Z"
+    },
+    {
+      "id": "notif-1785571490018",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:04:50.018Z"
+    },
+    {
+      "id": "notif-1785571464197",
+      "userId": "u-student-1",
+      "title": "Application Submitted Successfully",
+      "message": "Your application (app-1785571464197) for CGPA was received and assigned to Dr. Rajesh Sharma (Verification Officer) for document verification.",
+      "isRead": true,
+      "createdAt": "2026-08-01T08:04:24.197Z"
+    },
     {
       "id": "notif-1785566874433",
       "userId": "u-student-1",
