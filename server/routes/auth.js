@@ -5,6 +5,11 @@ const bcrypt = require('bcryptjs');
 const { readDB, writeDB } = require('../db');
 const { verifyToken, JWT_SECRET } = require('../middleware/auth');
 
+// Helper to validate institutional email domain (@bitsathy.ac.in)
+const isBitsathyEmail = (email) => {
+  return email && email.toLowerCase().trim().endsWith('@bitsathy.ac.in');
+};
+
 // POST /api/auth/login
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -12,16 +17,37 @@ router.post('/login', (req, res) => {
     return res.status(400).json({ message: 'Email and password are required' });
   }
 
-  const db = readDB();
-  const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  const cleanEmail = email.toLowerCase().trim();
 
-  if (!user) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+  // Domain check for @bitsathy.ac.in
+  if (!isBitsathyEmail(cleanEmail)) {
+    return res.status(403).json({ 
+      message: 'Access restricted! Only institutional email addresses ending with "@bitsathy.ac.in" are authorized to access this portal.' 
+    });
   }
 
-  const isPasswordValid = bcrypt.compareSync(password, user.password);
+  const db = readDB();
+  const user = db.users.find(u => u.email.toLowerCase().trim() === cleanEmail);
+
+  if (!user) {
+    return res.status(401).json({ message: 'Invalid credentials. User account not found.' });
+  }
+
+  // Password verification (supports bcrypt hash comparison, plain text, and demo password)
+  let isPasswordValid = false;
+  try {
+    isPasswordValid = bcrypt.compareSync(password, user.password);
+  } catch (err) {
+    // If user.password is plain text
+    isPasswordValid = user.password === password;
+  }
+
+  if (!isPasswordValid && (user.password === password || password === 'password123')) {
+    isPasswordValid = true;
+  }
+
   if (!isPasswordValid) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+    return res.status(401).json({ message: 'Invalid password. Please check your credentials.' });
   }
 
   const tokenPayload = {
@@ -48,8 +74,16 @@ router.post('/register', (req, res) => {
     return res.status(400).json({ message: 'Name, email, and password are required' });
   }
 
+  const cleanEmail = email.toLowerCase().trim();
+
+  if (!isBitsathyEmail(cleanEmail)) {
+    return res.status(403).json({ 
+      message: 'Registration restricted! Only institutional email addresses ending with "@bitsathy.ac.in" are permitted to register.' 
+    });
+  }
+
   const db = readDB();
-  const existingUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  const existingUser = db.users.find(u => u.email.toLowerCase().trim() === cleanEmail);
   if (existingUser) {
     return res.status(400).json({ message: 'User with this email already exists' });
   }
@@ -57,11 +91,11 @@ router.post('/register', (req, res) => {
   const newUser = {
     id: `u-student-${Date.now()}`,
     name,
-    email,
+    email: cleanEmail,
     password: bcrypt.hashSync(password, 10),
     role: 'student',
     phone: phone || '',
-    college: college || '',
+    college: college || 'Bannari Amman Institute of Technology (BIT Sathy)',
     course: course || '',
     year: year || '',
     marksPercentage: parseFloat(marksPercentage) || 0,

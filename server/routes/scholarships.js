@@ -5,9 +5,16 @@ const { verifyToken, requireRole } = require('../middleware/auth');
 
 // GET /api/scholarships - Public & Student browsing
 router.get('/', (req, res) => {
-  const { status, category, search } = req.query;
+  const { status, category, search, includeExpired } = req.query;
   const db = readDB();
   let list = [...db.scholarships];
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  // Requirement #4: If deadline is over, DO NOT display in student dashboard unless explicitly requested by admin
+  if (!includeExpired || includeExpired !== 'true') {
+    list = list.filter(s => !s.deadline || s.deadline >= todayStr);
+  }
 
   if (status) {
     list = list.filter(s => s.status === status);
@@ -39,12 +46,12 @@ router.get('/:id', (req, res) => {
   res.json(scheme);
 });
 
-// POST /api/scholarships - Create scheme (Admin only)
+// POST /api/scholarships - Create scheme (Admin only, includes Staff Allotment Requirement #9)
 router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
   const { 
     title, provider, category, amount, deadline, seats, 
     minPercentage, maxFamilyIncome, allowedCategories, description,
-    requiredDocuments, requiresAdminApproval 
+    requiredDocuments, requiresAdminApproval, assignedStaffId 
   } = req.body;
 
   if (!title || !amount || !deadline) {
@@ -52,10 +59,16 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
   }
 
   const db = readDB();
+  let assignedStaffName = 'Unassigned';
+  if (assignedStaffId) {
+    const staffUser = db.users.find(u => u.id === assignedStaffId);
+    if (staffUser) assignedStaffName = staffUser.name;
+  }
+
   const newScheme = {
     id: `sch-${Date.now()}`,
     title,
-    provider: provider || 'Government / Corporate CSR',
+    provider: provider || 'BIT Sathy & Government CSR',
     category: category || 'Merit-cum-Means',
     amount: parseFloat(amount),
     deadline,
@@ -63,6 +76,8 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
     appliedCount: 0,
     status: 'active',
     requiresAdminApproval: requiresAdminApproval !== undefined ? Boolean(requiresAdminApproval) : true,
+    assignedStaffId: assignedStaffId || '',
+    assignedStaffName: assignedStaffName,
     eligibilityRules: {
       minPercentage: parseFloat(minPercentage) || 0,
       maxFamilyIncome: parseFloat(maxFamilyIncome) || 1000000,
@@ -81,7 +96,7 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
     actorName: req.user.name,
     actorRole: req.user.role,
     action: 'SCHEME_CREATE',
-    details: `Created scholarship scheme "${title}" (Grant: ₹${amount.toLocaleString()})`,
+    details: `Created scholarship scheme "${title}" (Assigned to Staff: ${assignedStaffName})`,
     timestamp: new Date().toISOString()
   });
 
@@ -89,7 +104,7 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
   res.status(201).json(newScheme);
 });
 
-// PUT /api/scholarships/:id - Edit scheme (Admin only)
+// PUT /api/scholarships/:id - Edit scheme (Admin only, includes Staff Allotment Requirement #9)
 router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
   const db = readDB();
   const index = db.scholarships.findIndex(s => s.id === req.params.id);
@@ -102,8 +117,14 @@ router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
   const { 
     title, provider, category, amount, deadline, seats, status,
     minPercentage, maxFamilyIncome, allowedCategories, description,
-    requiredDocuments, requiresAdminApproval 
+    requiredDocuments, requiresAdminApproval, assignedStaffId 
   } = req.body;
+
+  let assignedStaffName = existing.assignedStaffName || 'Unassigned';
+  if (assignedStaffId !== undefined) {
+    const staffUser = db.users.find(u => u.id === assignedStaffId);
+    assignedStaffName = staffUser ? staffUser.name : 'Unassigned';
+  }
 
   const updatedScheme = {
     ...existing,
@@ -115,6 +136,8 @@ router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
     seats: seats !== undefined ? parseInt(seats) : existing.seats,
     status: status !== undefined ? status : existing.status,
     requiresAdminApproval: requiresAdminApproval !== undefined ? Boolean(requiresAdminApproval) : existing.requiresAdminApproval,
+    assignedStaffId: assignedStaffId !== undefined ? assignedStaffId : existing.assignedStaffId,
+    assignedStaffName,
     eligibilityRules: {
       ...existing.eligibilityRules,
       minPercentage: minPercentage !== undefined ? parseFloat(minPercentage) : existing.eligibilityRules.minPercentage,
@@ -133,7 +156,7 @@ router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
     actorName: req.user.name,
     actorRole: req.user.role,
     action: 'SCHEME_UPDATE',
-    details: `Updated scholarship scheme "${updatedScheme.title}"`,
+    details: `Updated scholarship scheme "${updatedScheme.title}" (Assigned Staff: ${assignedStaffName})`,
     timestamp: new Date().toISOString()
   });
 
@@ -152,7 +175,6 @@ router.patch('/:id/close', verifyToken, requireRole(['admin']), (req, res) => {
 
   scheme.status = 'closed';
 
-  // Add audit log
   db.auditLogs.unshift({
     id: `log-${Date.now()}`,
     actorName: req.user.name,

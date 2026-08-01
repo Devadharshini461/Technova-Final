@@ -12,15 +12,38 @@ router.get('/', verifyToken, requireRole(['admin']), (req, res) => {
     .map(s => {
       const assignedApps = db.applications.filter(a => a.assignedStaffId === s.id && a.status === 'under_review').length;
       const processedApps = db.applications.filter(a => a.assignedStaffId === s.id && a.status !== 'under_review').length;
+      const assignedSchemes = db.scholarships.filter(sch => sch.assignedStaffId === s.id).map(sch => sch.title);
       const { password: _, ...cleanStaff } = s;
       return {
         ...cleanStaff,
         assignedCount: assignedApps,
-        processedCount: processedApps
+        processedCount: processedApps,
+        assignedSchemes
       };
     });
 
   res.json(staffUsers);
+});
+
+// Requirement #10: GET /api/staff/student-reports - Student directory & scholarship count report
+router.get('/student-reports', verifyToken, requireRole(['admin']), (req, res) => {
+  const db = readDB();
+  const students = db.users.filter(u => u.role === 'student');
+
+  const reports = students.map(st => {
+    const studentApps = db.applications.filter(a => a.studentId === st.id);
+    const scholarshipNames = studentApps.map(a => a.scholarshipTitle);
+    const { password: _, ...cleanStudent } = st;
+
+    return {
+      ...cleanStudent,
+      applicationCount: studentApps.length,
+      scholarshipsApplied: scholarshipNames,
+      disbursedCount: studentApps.filter(a => a.status === 'disbursed').length
+    };
+  });
+
+  res.json(reports);
 });
 
 // POST /api/staff - Create new staff account (Admin only)
@@ -28,6 +51,10 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
   const { name, email, password, phone, department } = req.body;
   if (!name || !email || !password) {
     return res.status(400).json({ message: 'Name, email, and password are required' });
+  }
+
+  if (!email.toLowerCase().trim().endsWith('@bitsathy.ac.in')) {
+    return res.status(403).json({ message: 'Only @bitsathy.ac.in emails permitted for staff creation' });
   }
 
   const db = readDB();
@@ -39,7 +66,7 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
   const newStaff = {
     id: `u-staff-${Date.now()}`,
     name,
-    email,
+    email: email.toLowerCase().trim(),
     password: bcrypt.hashSync(password, 10),
     role: 'staff',
     phone: phone || '',

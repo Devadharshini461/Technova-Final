@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const DATA_FILE = path.join(__dirname, 'data.json');
 
-// Default initial data seed
+// Default initial data seed with @bitsathy.ac.in institutional emails
 const getInitialData = () => {
   const hashedPassword = bcrypt.hashSync('password123', 10);
 
@@ -12,7 +12,7 @@ const getInitialData = () => {
     {
       id: 'u-admin-1',
       name: 'Superintendent Administration',
-      email: 'admin@scholarships.gov.in',
+      email: 'admin@bitsathy.ac.in',
       password: hashedPassword,
       role: 'admin',
       phone: '+91 98765 43210',
@@ -22,7 +22,7 @@ const getInitialData = () => {
     {
       id: 'u-staff-1',
       name: 'Dr. Rajesh Sharma (Verification Officer)',
-      email: 'staff.sharma@scholarships.gov.in',
+      email: 'staff.sharma@bitsathy.ac.in',
       password: hashedPassword,
       role: 'staff',
       phone: '+91 98123 45678',
@@ -33,7 +33,7 @@ const getInitialData = () => {
     {
       id: 'u-staff-2',
       name: 'Priya Mukherjee (Senior Inspector)',
-      email: 'staff.priya@scholarships.gov.in',
+      email: 'staff.priya@bitsathy.ac.in',
       password: hashedPassword,
       role: 'staff',
       phone: '+91 97111 22334',
@@ -44,12 +44,12 @@ const getInitialData = () => {
     {
       id: 'u-student-1',
       name: 'Rahul Verma',
-      email: 'rahul.verma@gmail.com',
+      email: 'rahul.verma@bitsathy.ac.in',
       password: hashedPassword,
       role: 'student',
       phone: '+91 91234 56789',
-      college: 'Indian Institute of Technology, Delhi',
-      course: 'B.Tech Computer Science',
+      college: 'Bannari Amman Institute of Technology (BIT Sathy)',
+      course: 'B.E Computer Science',
       year: '3rd Year',
       marksPercentage: 88.5,
       familyIncome: 180000,
@@ -65,12 +65,12 @@ const getInitialData = () => {
     {
       id: 'u-student-2',
       name: 'Ananya Deshmukh',
-      email: 'ananya.d@gmail.com',
+      email: 'ananya.d@bitsathy.ac.in',
       password: hashedPassword,
       role: 'student',
       phone: '+91 98220 11223',
-      college: 'Delhi University (SRCC)',
-      course: 'B.Com (Hons)',
+      college: 'Bannari Amman Institute of Technology (BIT Sathy)',
+      course: 'B.Tech Information Technology',
       year: '2nd Year',
       marksPercentage: 92.0,
       familyIncome: 220000,
@@ -95,8 +95,10 @@ const getInitialData = () => {
       deadline: '2026-10-31',
       seats: 5000,
       appliedCount: 1420,
-      status: 'active', // active, closed
+      status: 'active',
       requiresAdminApproval: true,
+      assignedStaffId: 'u-staff-1',
+      assignedStaffName: 'Dr. Rajesh Sharma (Verification Officer)',
       eligibilityRules: {
         minPercentage: 75.0,
         maxFamilyIncome: 250000,
@@ -116,7 +118,9 @@ const getInitialData = () => {
       seats: 2000,
       appliedCount: 890,
       status: 'active',
-      requiresAdminApproval: false, // Auto-approves once staff verifies
+      requiresAdminApproval: false,
+      assignedStaffId: 'u-staff-2',
+      assignedStaffName: 'Priya Mukherjee (Senior Inspector)',
       eligibilityRules: {
         minPercentage: 70.0,
         maxFamilyIncome: 800000,
@@ -137,6 +141,8 @@ const getInitialData = () => {
       appliedCount: 3120,
       status: 'active',
       requiresAdminApproval: true,
+      assignedStaffId: 'u-staff-1',
+      assignedStaffName: 'Dr. Rajesh Sharma (Verification Officer)',
       eligibilityRules: {
         minPercentage: 60.0,
         maxFamilyIncome: 300000,
@@ -148,15 +154,17 @@ const getInitialData = () => {
     },
     {
       id: 'sch-104',
-      title: 'Buddy4Study Tech Future Innovators Award',
+      title: 'BIT Sathy Innovation Merit Fellowship (Expired Demo)',
       provider: 'Tech CSR Consortium',
-      category: 'Merit-cum-Means',
+      category: 'Tech',
       amount: 120000,
-      deadline: '2026-08-30',
+      deadline: '2025-01-01', // Expired deadline to test Requirement #4
       seats: 500,
       appliedCount: 450,
       status: 'active',
       requiresAdminApproval: true,
+      assignedStaffId: 'u-staff-2',
+      assignedStaffName: 'Priya Mukherjee (Senior Inspector)',
       eligibilityRules: {
         minPercentage: 80.0,
         maxFamilyIncome: 500000,
@@ -164,7 +172,7 @@ const getInitialData = () => {
         description: 'Merit-based grant for computer science and IT engineering students demonstrating academic excellence.'
       },
       requiredDocuments: ['Marksheet', 'Income Certificate', 'ID Proof'],
-      createdDate: '2026-07-01'
+      createdDate: '2025-01-01'
     }
   ];
 
@@ -177,37 +185,37 @@ const getInitialData = () => {
       requiresAdminApproval: true,
       studentId: 'u-student-1',
       studentName: 'Rahul Verma',
-      studentEmail: 'rahul.verma@gmail.com',
+      studentEmail: 'rahul.verma@bitsathy.ac.in',
       studentPhone: '+91 91234 56789',
-      college: 'Indian Institute of Technology, Delhi',
-      course: 'B.Tech Computer Science',
+      college: 'Bannari Amman Institute of Technology (BIT Sathy)',
+      course: 'B.E Computer Science',
       year: '3rd Year',
       marksPercentage: 88.5,
       familyIncome: 180000,
       category: 'OBC',
       assignedStaffId: 'u-staff-1',
-      assignedStaffName: 'Dr. Rajesh Sharma',
-      status: 'under_review', // submitted, under_review, verified, pending_admin_approval, approved, rejected, disbursed
+      assignedStaffName: 'Dr. Rajesh Sharma (Verification Officer)',
+      status: 'under_review',
       documents: [
         {
           id: 'doc-1',
-          name: '12th Marksheet & Semester Transcripts',
+          name: '12th Marksheet & Semester Transcripts.pdf',
           type: 'Marksheet',
-          fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60',
-          status: 'pending', // pending, valid, invalid, needs_resubmission
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+          status: 'pending',
           remark: ''
         },
         {
           id: 'doc-2',
-          name: 'Tahsildar Income Certificate',
+          name: 'Tahsildar Income Certificate.pdf',
           type: 'Income Certificate',
-          fileUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=60',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
           status: 'pending',
           remark: ''
         },
         {
           id: 'doc-3',
-          name: 'Aadhaar Card Copy',
+          name: 'Aadhaar Card Copy.jpg',
           type: 'ID Proof',
           fileUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60',
           status: 'pending',
@@ -215,7 +223,7 @@ const getInitialData = () => {
         },
         {
           id: 'doc-4',
-          name: 'Bank Account Passbook Front Page',
+          name: 'Bank Account Passbook Front Page.jpg',
           type: 'Bank Passbook Copy',
           fileUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=600&auto=format&fit=crop&q=60',
           status: 'pending',
@@ -227,7 +235,7 @@ const getInitialData = () => {
         reasons: ['Marks 88.5% >= Min 75.0%', 'Family Income ₹1.8L <= Max ₹2.5L', 'Category OBC is eligible']
       },
       staffRemarks: '',
-      staffRecommendation: '', // recommend_approve, recommend_reject
+      staffRecommendation: '',
       adminRemarks: '',
       disbursementDetails: null,
       submittedAt: new Date(Date.now() - 3600000 * 48).toISOString(),
@@ -241,37 +249,37 @@ const getInitialData = () => {
       requiresAdminApproval: false,
       studentId: 'u-student-2',
       studentName: 'Ananya Deshmukh',
-      studentEmail: 'ananya.d@gmail.com',
+      studentEmail: 'ananya.d@bitsathy.ac.in',
       studentPhone: '+91 98220 11223',
-      college: 'Delhi University (SRCC)',
-      course: 'B.Com (Hons)',
+      college: 'Bannari Amman Institute of Technology (BIT Sathy)',
+      course: 'B.Tech Information Technology',
       year: '2nd Year',
       marksPercentage: 92.0,
       familyIncome: 220000,
       category: 'General',
       assignedStaffId: 'u-staff-2',
-      assignedStaffName: 'Priya Mukherjee',
+      assignedStaffName: 'Priya Mukherjee (Senior Inspector)',
       status: 'pending_admin_approval',
       documents: [
         {
           id: 'doc-21',
-          name: '12th Board Marksheet',
+          name: '12th Board Marksheet.pdf',
           type: 'Marksheet',
-          fileUrl: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
           status: 'valid',
-          remark: 'Verified against Digilocker'
+          remark: 'Verified authentic'
         },
         {
           id: 'doc-22',
-          name: 'Annual Family Income Statement',
+          name: 'Annual Family Income Statement.pdf',
           type: 'Income Certificate',
-          fileUrl: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=60',
+          fileUrl: 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
           status: 'valid',
-          remark: 'Valid government stamp verified'
+          remark: 'Valid government stamp'
         },
         {
           id: 'doc-23',
-          name: 'College ID Card',
+          name: 'College ID Card.jpg',
           type: 'College ID',
           fileUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop&q=60',
           status: 'valid',
@@ -282,7 +290,7 @@ const getInitialData = () => {
         passed: true,
         reasons: ['Marks 92.0% >= Min 70.0%', 'Family Income ₹2.2L <= Max ₹8.0L']
       },
-      staffRemarks: 'Applicant profile authentic. High academic score. Strongly recommended.',
+      staffRemarks: 'Applicant profile authentic. High academic score. Recommended.',
       staffRecommendation: 'recommend_approve',
       adminRemarks: '',
       disbursementDetails: null,
@@ -297,7 +305,7 @@ const getInitialData = () => {
       actorName: 'Superintendent Administration',
       actorRole: 'admin',
       action: 'SCHEME_CREATE',
-      details: 'Created new scheme: Reliance Foundation Undergraduate Scholarship 2026',
+      details: 'Created new scheme: Reliance Foundation Undergraduate Scholarship 2026 (Assigned to Dr. Rajesh Sharma)',
       timestamp: new Date(Date.now() - 3600000 * 120).toISOString()
     },
     {
@@ -307,14 +315,6 @@ const getInitialData = () => {
       action: 'APPLICATION_SUBMIT',
       details: 'Submitted application app-2001 for Reliance Foundation Undergraduate Scholarship 2026',
       timestamp: new Date(Date.now() - 3600000 * 48).toISOString()
-    },
-    {
-      id: 'log-3',
-      actorName: 'Priya Mukherjee',
-      actorRole: 'staff',
-      action: 'STAFF_RECOMMEND',
-      details: 'Recommended Approval for app-2002 (Ananya Deshmukh)',
-      timestamp: new Date(Date.now() - 3600000 * 12).toISOString()
     }
   ];
 
@@ -323,17 +323,9 @@ const getInitialData = () => {
       id: 'notif-1',
       userId: 'u-student-1',
       title: 'Application Submitted Successfully',
-      message: 'Your application app-2001 for Reliance Foundation Undergraduate Scholarship 2026 is currently under staff review.',
+      message: 'Your application app-2001 for Reliance Foundation Undergraduate Scholarship 2026 was received and routed to assigned officer Dr. Rajesh Sharma.',
       isRead: false,
       createdAt: new Date(Date.now() - 3600000 * 48).toISOString()
-    },
-    {
-      id: 'notif-2',
-      userId: 'u-student-2',
-      title: 'Verification Complete',
-      message: 'Your documents have been verified by Staff Priya Mukherjee. Application is pending final Admin clearance.',
-      isRead: false,
-      createdAt: new Date(Date.now() - 3600000 * 12).toISOString()
     }
   ];
 
@@ -346,7 +338,6 @@ const getInitialData = () => {
   };
 };
 
-// Helper read/write database handlers
 const readDB = () => {
   if (!fs.existsSync(DATA_FILE)) {
     const initial = getInitialData();

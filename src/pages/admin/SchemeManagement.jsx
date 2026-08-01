@@ -1,37 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Edit2, Lock, CheckCircle2, Award, Calendar, DollarSign, Building2, X } from 'lucide-react';
+import { Plus, Edit2, Lock, Building2, X, UserCheck } from 'lucide-react';
 
 export const SchemeManagement = () => {
   const [schemes, setSchemes] = useState([]);
+  const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingScheme, setEditingScheme] = useState(null);
   const [error, setError] = useState('');
 
-  const [formData, setFormData] = useState({
-    title: '',
-    provider: '',
-    category: 'Merit-cum-Means',
-    amount: 100000,
-    deadline: '2026-12-31',
-    seats: 1000,
-    minPercentage: 75.0,
-    maxFamilyIncome: 300000,
-    description: '',
-    requiresAdminApproval: true,
-    requiredDocuments: ['Marksheet', 'Income Certificate', 'ID Proof', 'Bank Passbook Copy']
-  });
-
   useEffect(() => {
-    fetchSchemes();
+    fetchData();
   }, []);
 
-  const fetchSchemes = async () => {
+  const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/scholarships');
-      setSchemes(res.data);
+      const [schemesRes, staffRes] = await Promise.all([
+        axios.get('/api/scholarships?includeExpired=true'),
+        axios.get('/api/staff')
+      ]);
+      setSchemes(schemesRes.data);
+      setStaffList(staffRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -39,25 +30,28 @@ export const SchemeManagement = () => {
     }
   };
 
-  const handleOpenCreate = () => {
+  const handleOpenCreate = (e) => {
+    if (e) e.preventDefault();
     setEditingScheme(null);
     setFormData({
       title: '',
-      provider: 'Central Scholarship Authority',
+      provider: 'BIT Sathy & Government CSR',
       category: 'Merit-cum-Means',
       amount: 100000,
       deadline: '2026-12-31',
       seats: 1000,
       minPercentage: 75.0,
       maxFamilyIncome: 300000,
-      description: 'Provides financial aid for deserving undergraduate students meeting academic and income thresholds.',
+      description: 'Provides financial aid for deserving BIT Sathy undergraduate students meeting academic and income thresholds.',
       requiresAdminApproval: true,
+      assignedStaffId: staffList[0]?.id || '',
       requiredDocuments: ['Marksheet', 'Income Certificate', 'ID Proof', 'Bank Passbook Copy']
     });
     setShowModal(true);
   };
 
-  const handleOpenEdit = (scheme) => {
+  const handleOpenEdit = (scheme, e) => {
+    if (e) e.preventDefault();
     setEditingScheme(scheme);
     setFormData({
       title: scheme.title,
@@ -70,10 +64,26 @@ export const SchemeManagement = () => {
       maxFamilyIncome: scheme.eligibilityRules.maxFamilyIncome,
       description: scheme.eligibilityRules.description,
       requiresAdminApproval: scheme.requiresAdminApproval,
+      assignedStaffId: scheme.assignedStaffId || '',
       requiredDocuments: scheme.requiredDocuments || ['Marksheet', 'Income Certificate', 'ID Proof']
     });
     setShowModal(true);
   };
+
+  const [formData, setFormData] = useState({
+    title: '',
+    provider: '',
+    category: 'Merit-cum-Means',
+    amount: 100000,
+    deadline: '2026-12-31',
+    seats: 1000,
+    minPercentage: 75.0,
+    maxFamilyIncome: 300000,
+    description: '',
+    requiresAdminApproval: true,
+    assignedStaffId: '',
+    requiredDocuments: ['Marksheet', 'Income Certificate', 'ID Proof', 'Bank Passbook Copy']
+  });
 
   const handleSaveScheme = async (e) => {
     e.preventDefault();
@@ -81,22 +91,27 @@ export const SchemeManagement = () => {
 
     try {
       if (editingScheme) {
-        await axios.put(`/api/scholarships/${editingScheme.id}`, formData);
+        const res = await axios.put(`/api/scholarships/${editingScheme.id}`, formData);
+        // In-place state update: preserve scroll position and component state
+        setSchemes(prev => prev.map(s => s.id === res.data.id ? res.data : s));
       } else {
-        await axios.post('/api/scholarships', formData);
+        const res = await axios.post('/api/scholarships', formData);
+        // In-place state update: insert new scheme without reloading
+        setSchemes(prev => [res.data, ...prev]);
       }
       setShowModal(false);
-      fetchSchemes();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to save scheme');
     }
   };
 
-  const handleCloseScheme = async (id) => {
-    if (window.confirm('Are you sure you want to close this scheme? No new applications will be accepted.')) {
+  const handleCloseScheme = async (id, e) => {
+    if (e) e.preventDefault();
+    if (window.confirm('Are you sure you want to close this scheme?')) {
       try {
-        await axios.patch(`/api/scholarships/${id}/close`);
-        fetchSchemes();
+        const res = await axios.patch(`/api/scholarships/${id}/close`);
+        // In-place state update: update scheme status without reloading
+        setSchemes(prev => prev.map(s => s.id === id ? res.data : s));
       } catch (err) {
         console.error(err);
       }
@@ -108,11 +123,12 @@ export const SchemeManagement = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold text-slate-900">Scholarship Scheme Management</h2>
-          <p className="text-xs text-slate-500 mt-0.5">Configure financial aid programs, eligibility thresholds, and seat quotas.</p>
+          <p className="text-xs text-slate-500 mt-0.5">Configure financial aid programs, assign designated staff officers, and set eligibility rules.</p>
         </div>
 
         <button
-          onClick={handleOpenCreate}
+          type="button"
+          onClick={(e) => handleOpenCreate(e)}
           className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition flex items-center gap-1.5"
         >
           <Plus className="w-4 h-4" /> Create New Scheme
@@ -120,7 +136,7 @@ export const SchemeManagement = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-slate-400 font-medium">Loading schemes...</div>
+        <div className="text-center py-12 text-slate-400 font-medium text-xs">Loading schemes...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {schemes.map((scheme) => (
@@ -142,6 +158,14 @@ export const SchemeManagement = () => {
                   <Building2 className="w-3.5 h-3.5 text-slate-400" /> {scheme.provider}
                 </div>
 
+                <div className="mt-3 p-2.5 bg-indigo-50/70 border border-indigo-100 rounded-xl flex items-center gap-2 text-xs">
+                  <UserCheck className="w-4 h-4 text-indigo-600 shrink-0" />
+                  <div>
+                    <div className="text-[10px] font-bold text-indigo-900 uppercase">Assigned Verification Officer</div>
+                    <div className="font-bold text-indigo-950">{scheme.assignedStaffName || 'Unassigned'}</div>
+                  </div>
+                </div>
+
                 <div className="mt-4 grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-2xl border border-slate-100 text-center text-xs">
                   <div>
                     <div className="text-[10px] text-slate-400 font-bold uppercase">Grant Amount</div>
@@ -156,24 +180,20 @@ export const SchemeManagement = () => {
                     <div className="font-bold text-amber-700 mt-0.5">{scheme.deadline}</div>
                   </div>
                 </div>
-
-                <div className="mt-3 text-xs text-slate-600 space-y-1">
-                  <div>• Min Marks: <strong>{scheme.eligibilityRules.minPercentage}%</strong></div>
-                  <div>• Max Income: <strong>₹{scheme.eligibilityRules.maxFamilyIncome.toLocaleString()}</strong></div>
-                  <div>• Executive Clearance required: <strong>{scheme.requiresAdminApproval ? 'Yes (Admin approval required)' : 'No (Auto-approves on staff verification)'}</strong></div>
-                </div>
               </div>
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
                 <button
-                  onClick={() => handleOpenEdit(scheme)}
+                  type="button"
+                  onClick={(e) => handleOpenEdit(scheme, e)}
                   className="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-xs font-semibold text-slate-700 transition flex items-center gap-1"
                 >
-                  <Edit2 className="w-3.5 h-3.5" /> Edit Scheme
+                  <Edit2 className="w-3.5 h-3.5" /> Edit & Allot Staff
                 </button>
                 {scheme.status === 'active' && (
                   <button
-                    onClick={() => handleCloseScheme(scheme.id)}
+                    type="button"
+                    onClick={(e) => handleCloseScheme(scheme.id, e)}
                     className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition flex items-center gap-1"
                   >
                     <Lock className="w-3.5 h-3.5" /> Close Scheme
@@ -191,9 +211,9 @@ export const SchemeManagement = () => {
           <div className="bg-white rounded-3xl max-w-xl w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 my-8">
             <div className="bg-slate-900 p-5 text-white flex items-center justify-between">
               <h3 className="text-base font-bold">
-                {editingScheme ? 'Edit Scholarship Scheme' : 'Create New Scholarship Scheme'}
+                {editingScheme ? 'Edit Scheme & Staff Allotment' : 'Create Scheme & Assign Staff'}
               </h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white">
+              <button type="button" onClick={() => setShowModal(false)} className="text-slate-400 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -214,6 +234,28 @@ export const SchemeManagement = () => {
                   onChange={e => setFormData({ ...formData, title: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
                 />
+              </div>
+
+              <div className="p-3 bg-indigo-50/70 border border-indigo-200 rounded-2xl">
+                <label className="block font-bold text-indigo-950 mb-1 flex items-center gap-1">
+                  <UserCheck className="w-4 h-4 text-indigo-600" /> Allot Verification Staff Officer
+                </label>
+                <select
+                  required
+                  value={formData.assignedStaffId}
+                  onChange={e => setFormData({ ...formData, assignedStaffId: e.target.value })}
+                  className="w-full px-3 py-2 rounded-xl border border-indigo-200 font-bold text-slate-900 bg-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                >
+                  <option value="">-- Select Staff Officer --</option>
+                  {staffList.map(st => (
+                    <option key={st.id} value={st.id}>
+                      {st.name} ({st.email})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-[10px] text-indigo-800 mt-1">
+                  Applications submitted for this scheme will report ONLY to this assigned officer.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
@@ -311,7 +353,7 @@ export const SchemeManagement = () => {
 
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between">
                 <div>
-                  <div className="font-bold text-slate-800">Requires Executive Admin Final Approval</div>
+                  <div className="font-bold text-slate-800">Requires Executive Admin Approval</div>
                   <div className="text-[10px] text-slate-400">If disabled, application auto-approves as soon as staff verifies.</div>
                 </div>
                 <input
@@ -334,7 +376,7 @@ export const SchemeManagement = () => {
                   type="submit"
                   className="px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-500 shadow-md shadow-emerald-600/20"
                 >
-                  Save Scheme
+                  Save Scheme & Allotment
                 </button>
               </div>
             </form>

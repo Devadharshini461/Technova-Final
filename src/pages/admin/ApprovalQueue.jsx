@@ -3,7 +3,7 @@ import axios from 'axios';
 import { StatusBadge } from '../../components/StatusBadge';
 import { 
   CheckCircle2, XCircle, ShieldAlert, DollarSign, RefreshCw, 
-  Search, Shield, AlertTriangle, MessageSquare, ArrowRight 
+  Shield, MessageSquare, ArrowDown, Sparkles 
 } from 'lucide-react';
 
 export const ApprovalQueue = () => {
@@ -16,11 +16,14 @@ export const ApprovalQueue = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchApplications();
+    fetchApplications(true);
   }, [search]);
 
-  const fetchApplications = async () => {
-    setLoading(true);
+  // Silent fetch: Only set loading = true on initial boot
+  const fetchApplications = async (isInitial = false) => {
+    if (isInitial && applications.length === 0) {
+      setLoading(true);
+    }
     try {
       const res = await axios.get('/api/applications', { params: { search } });
       setApplications(res.data);
@@ -31,32 +34,35 @@ export const ApprovalQueue = () => {
     }
   };
 
-  const handleApprove = async (appId) => {
+  const handleApprove = async (appId, e) => {
+    if (e) e.preventDefault();
     try {
-      await axios.patch(`/api/applications/${appId}/approve`, { remark: 'Final Executive Approval Granted' });
-      fetchApplications();
+      const res = await axios.patch(`/api/applications/${appId}/approve`, { remark: 'Final Executive Approval Granted' });
+      setApplications(prev => prev.map(a => a.id === appId ? res.data : a));
     } catch (err) {
       alert(err.response?.data?.message || 'Approval failed');
     }
   };
 
-  const handleReject = async (appId) => {
+  const handleReject = async (appId, e) => {
+    if (e) e.preventDefault();
     const remark = prompt('Enter rejection reason for audit log:');
     if (remark !== null) {
       try {
-        await axios.patch(`/api/applications/${appId}/reject`, { remark });
-        fetchApplications();
+        const res = await axios.patch(`/api/applications/${appId}/reject`, { remark });
+        setApplications(prev => prev.map(a => a.id === appId ? res.data : a));
       } catch (err) {
         alert(err.response?.data?.message || 'Rejection failed');
       }
     }
   };
 
-  const handleDisburse = async (appId) => {
+  const handleDisburse = async (appId, e) => {
+    if (e) e.preventDefault();
     if (window.confirm('Trigger instant fund transfer transaction via NPCI/DBT bridge?')) {
       try {
-        await axios.patch(`/api/applications/${appId}/disburse`);
-        fetchApplications();
+        const res = await axios.patch(`/api/applications/${appId}/disburse`);
+        setApplications(prev => prev.map(a => a.id === appId ? res.data : a));
       } catch (err) {
         alert(err.response?.data?.message || 'Disbursement failed');
       }
@@ -73,13 +79,13 @@ export const ApprovalQueue = () => {
     }
 
     try {
-      await axios.patch(`/api/applications/${overrideApp.id}/override`, {
+      const res = await axios.patch(`/api/applications/${overrideApp.id}/override`, {
         decision: overrideDecision,
         justification: overrideJustification
       });
+      setApplications(prev => prev.map(a => a.id === overrideApp.id ? res.data : a));
       setOverrideApp(null);
       setOverrideJustification('');
-      fetchApplications();
     } catch (err) {
       setError(err.response?.data?.message || 'Override action failed');
     }
@@ -97,7 +103,8 @@ export const ApprovalQueue = () => {
         </div>
 
         <button
-          onClick={fetchApplications}
+          type="button"
+          onClick={() => fetchApplications(false)}
           className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center gap-1.5"
         >
           <RefreshCw className="w-3.5 h-3.5" /> Refresh Queue
@@ -111,22 +118,36 @@ export const ApprovalQueue = () => {
             <ShieldAlert className="w-5 h-5 text-amber-600" />
             <h3 className="text-sm font-bold text-amber-950">Awaiting Final Admin Clearance ({pendingAdminApps.length})</h3>
           </div>
+          <span className="text-[11px] font-semibold text-slate-500">
+            Sorted by Priority (Students with fewer previous applications first)
+          </span>
         </div>
 
         {loading ? (
-          <div className="p-8 text-center text-slate-400 text-xs">Loading pending queue...</div>
+          <div className="p-8 text-center text-slate-400 text-xs font-medium">Loading pending queue...</div>
         ) : pendingAdminApps.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-xs">No applications currently pending executive clearance.</div>
         ) : (
           <div className="divide-y divide-slate-100 text-xs">
             {pendingAdminApps.map((app) => (
-              <div key={app.id} className="p-6 hover:bg-slate-50/80 transition space-y-4">
+              <div key={app.id} className={`p-6 transition space-y-4 ${app.isLowPriority ? 'bg-slate-50/80' : 'hover:bg-slate-50/50'}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-bold text-emerald-700">{app.id}</span>
                       <StatusBadge status={app.status} />
+
+                      {app.isLowPriority ? (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-200 text-slate-700 border border-slate-300 flex items-center gap-1">
+                          <ArrowDown className="w-3 h-3 text-slate-500" /> Low Priority (App Count: {app.studentTotalApps})
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1">
+                          <Sparkles className="w-3 h-3 text-emerald-600" /> High Priority (First-time Applicant)
+                        </span>
+                      )}
                     </div>
+
                     <h4 className="text-base font-bold text-slate-900 mt-1">{app.studentName}</h4>
                     <p className="text-xs text-slate-500 mt-0.5">
                       Scheme: <strong className="text-slate-800">{app.scholarshipTitle}</strong> • Award: <strong className="text-blue-700">₹{app.scholarshipAmount?.toLocaleString()}</strong>
@@ -135,19 +156,23 @@ export const ApprovalQueue = () => {
 
                   <div className="flex flex-wrap items-center gap-2">
                     <button
-                      onClick={() => handleApprove(app.id)}
+                      type="button"
+                      onClick={(e) => handleApprove(app.id, e)}
                       className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-md transition flex items-center gap-1"
                     >
                       <CheckCircle2 className="w-4 h-4" /> Final Approve
                     </button>
                     <button
-                      onClick={() => handleReject(app.id)}
+                      type="button"
+                      onClick={(e) => handleReject(app.id, e)}
                       className="px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition flex items-center gap-1"
                     >
                       <XCircle className="w-4 h-4" /> Reject
                     </button>
                     <button
-                      onClick={() => {
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
                         setOverrideApp(app);
                         setOverrideJustification('');
                       }}
@@ -162,7 +187,7 @@ export const ApprovalQueue = () => {
                 <div className="p-3 rounded-2xl bg-indigo-50/60 border border-indigo-100 text-indigo-950 flex items-center gap-3">
                   <MessageSquare className="w-4 h-4 text-indigo-600 shrink-0" />
                   <div>
-                    <span className="font-bold">Staff Inspector Recommendation:</span> {app.assignedStaffName} marked "{app.staffRecommendation?.replace('_', ' ')}". 
+                    <span className="font-bold">Assigned Staff Inspector ({app.assignedStaffName}):</span> Marked "{app.staffRecommendation?.replace('_', ' ')}". 
                     <span className="italic text-indigo-800 ml-1">"{app.staffRemarks || 'Documents authentic and verified'}"</span>
                   </div>
                 </div>
@@ -206,7 +231,8 @@ export const ApprovalQueue = () => {
                     </td>
                     <td className="py-4 px-6 text-right">
                       <button
-                        onClick={() => handleDisburse(app.id)}
+                        type="button"
+                        onClick={(e) => handleDisburse(app.id, e)}
                         className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-md shadow-cyan-600/20 transition inline-flex items-center gap-1.5"
                       >
                         <DollarSign className="w-3.5 h-3.5" /> Trigger Fund Transfer
@@ -258,7 +284,7 @@ export const ApprovalQueue = () => {
                   required
                   value={overrideJustification}
                   onChange={e => setOverrideJustification(e.target.value)}
-                  placeholder="State clear reasons for overriding staff recommendation (e.g. Special discretionary clearance granted by Department Head)..."
+                  placeholder="State clear reasons for overriding staff recommendation..."
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>

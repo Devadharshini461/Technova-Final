@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UserPlus, Trash2, ShieldCheck, Mail, Phone, Building2, User, X } from 'lucide-react';
+import { UserPlus, Trash2, Mail, Phone, X } from 'lucide-react';
 
 export const StaffManagement = () => {
   const [staffList, setStaffList] = useState([]);
@@ -36,7 +36,9 @@ export const StaffManagement = () => {
     setError('');
 
     try {
-      await axios.post('/api/staff', formData);
+      const res = await axios.post('/api/staff', formData);
+      // In-place state update: append new staff without page refresh
+      setStaffList(prev => [...prev, res.data]);
       setShowModal(false);
       setFormData({
         name: '',
@@ -45,17 +47,18 @@ export const StaffManagement = () => {
         phone: '',
         department: 'Document Verification Cell'
       });
-      fetchStaff();
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add staff account');
     }
   };
 
-  const handleRemoveStaff = async (id, name) => {
+  const handleRemoveStaff = async (id, name, e) => {
+    if (e) e.preventDefault();
     if (window.confirm(`Are you sure you want to remove staff account "${name}"?`)) {
       try {
         await axios.delete(`/api/staff/${id}`);
-        fetchStaff();
+        // In-place state update: remove staff without page refresh or scroll reset
+        setStaffList(prev => prev.filter(s => s.id !== id));
       } catch (err) {
         alert(err.response?.data?.message || 'Failed to delete staff account');
       }
@@ -71,6 +74,7 @@ export const StaffManagement = () => {
         </div>
 
         <button
+          type="button"
           onClick={() => setShowModal(true)}
           className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/20 transition flex items-center gap-1.5"
         >
@@ -79,7 +83,7 @@ export const StaffManagement = () => {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-slate-400 font-medium">Loading staff accounts...</div>
+        <div className="text-center py-12 text-slate-400 font-medium text-xs">Loading staff accounts...</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {staffList.map((s) => (
@@ -122,7 +126,8 @@ export const StaffManagement = () => {
 
               <div className="pt-3 border-t border-slate-100 flex items-center justify-end">
                 <button
-                  onClick={() => handleRemoveStaff(s.id, s.name)}
+                  type="button"
+                  onClick={(e) => handleRemoveStaff(s.id, s.name, e)}
                   className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition flex items-center gap-1"
                 >
                   <Trash2 className="w-3.5 h-3.5" /> Remove Staff
@@ -139,7 +144,7 @@ export const StaffManagement = () => {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <h3 className="text-base font-bold text-slate-900">Add New Verification Officer</h3>
-              <button onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600">
+              <button type="button" onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -164,14 +169,14 @@ export const StaffManagement = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Official Email Address</label>
+                <label className="block font-bold text-slate-800 mb-1">Official Email Address (@bitsathy.ac.in)</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="staff.ramesh@scholarships.gov.in"
+                  placeholder="staff.ramesh@bitsathy.ac.in"
                 />
               </div>
 

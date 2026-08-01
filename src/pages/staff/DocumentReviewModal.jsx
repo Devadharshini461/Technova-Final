@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { 
   X, CheckCircle2, XCircle, AlertTriangle, FileText, Eye, 
-  ThumbsUp, ThumbsDown, Building2, User, CreditCard, ShieldCheck 
+  ThumbsUp, ThumbsDown, User, ExternalLink 
 } from 'lucide-react';
 
-export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
+export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSuccess }) => {
   const [appData, setAppData] = useState(application);
   const [selectedDoc, setSelectedDoc] = useState(application.documents[0] || null);
   const [staffRemark, setStaffRemark] = useState(application.staffRemarks || '');
@@ -13,7 +13,8 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const handleVerifyDoc = async (docId, status) => {
+  const handleVerifyDoc = async (docId, status, e) => {
+    if (e) e.preventDefault();
     try {
       const remark = docRemarks[docId] || '';
       const res = await axios.patch(`/api/applications/${appData.id}/documents/${docId}`, {
@@ -21,13 +22,18 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
         remark
       });
       setAppData(res.data);
+      if (onUpdateDoc) onUpdateDoc(res.data);
+
+      const updatedDoc = res.data.documents.find(d => d.id === docId);
+      if (updatedDoc) setSelectedDoc(updatedDoc);
     } catch (err) {
       console.error(err);
       setError('Failed to update document status');
     }
   };
 
-  const handleRecommendation = async (decision) => {
+  const handleRecommendation = async (decision, e) => {
+    if (e) e.preventDefault();
     setSubmitting(true);
     setError('');
 
@@ -45,6 +51,14 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
   };
 
   const autoCheck = appData.autoEligibilityCheck || { passed: true, reasons: [] };
+  const allDocsValid = appData.documents.every(d => d.status === 'valid');
+
+  const isPdfDoc = (doc) => {
+    if (!doc) return false;
+    const url = doc.fileUrl ? doc.fileUrl.toLowerCase() : '';
+    const name = doc.name ? doc.name.toLowerCase() : '';
+    return url.includes('.pdf') || name.includes('.pdf') || doc.type?.toLowerCase().includes('pdf') || doc.type?.toLowerCase().includes('marksheet') || doc.type?.toLowerCase().includes('income');
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
@@ -63,6 +77,7 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
           </div>
 
           <button
+            type="button"
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-full transition"
           >
@@ -76,7 +91,7 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
           {/* Left Panel: Student Details, Auto-Check & Doc Controls (7 cols) */}
           <div className="lg:col-span-7 p-6 overflow-y-auto space-y-6 border-r border-slate-200">
             
-            {/* Auto-Eligibility Engine Check Banner */}
+            {/* Auto-Eligibility Check Status Banner */}
             <div className={`p-4 rounded-2xl border ${
               autoCheck.passed 
                 ? 'bg-emerald-50/70 border-emerald-200 text-emerald-950' 
@@ -141,10 +156,10 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
               </div>
             </div>
 
-            {/* Document Inspection & Verification Section */}
+            {/* Document Checklist & Status Controls */}
             <div>
               <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                <FileText className="w-4 h-4 text-blue-600" /> Document Verification checklist
+                <FileText className="w-4 h-4 text-blue-600" /> Document Verification Checklist
               </h3>
 
               <div className="space-y-3">
@@ -177,14 +192,18 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
                       </div>
 
                       <button
-                        onClick={() => setSelectedDoc(doc)}
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedDoc(doc);
+                        }}
                         className="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center gap-1 shrink-0"
                       >
-                        <Eye className="w-3.5 h-3.5" /> Preview Doc
+                        <Eye className="w-3.5 h-3.5" /> Inspect Document
                       </button>
                     </div>
 
-                    {/* Verification Control Buttons per document */}
+                    {/* Verification Control Buttons */}
                     <div className="mt-3 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-center gap-2">
                       <input
                         type="text"
@@ -196,7 +215,8 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
 
                       <div className="flex items-center gap-1.5 shrink-0 w-full sm:w-auto">
                         <button
-                          onClick={() => handleVerifyDoc(doc.id, 'valid')}
+                          type="button"
+                          onClick={(e) => handleVerifyDoc(doc.id, 'valid', e)}
                           className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
                             doc.status === 'valid'
                               ? 'bg-emerald-600 text-white shadow-sm'
@@ -206,7 +226,8 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
                           <CheckCircle2 className="w-3.5 h-3.5" /> Valid
                         </button>
                         <button
-                          onClick={() => handleVerifyDoc(doc.id, 'needs_resubmission')}
+                          type="button"
+                          onClick={(e) => handleVerifyDoc(doc.id, 'needs_resubmission', e)}
                           className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
                             doc.status === 'needs_resubmission'
                               ? 'bg-amber-600 text-white shadow-sm'
@@ -216,7 +237,8 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
                           <AlertTriangle className="w-3.5 h-3.5" /> Flag Resubmit
                         </button>
                         <button
-                          onClick={() => handleVerifyDoc(doc.id, 'invalid')}
+                          type="button"
+                          onClick={(e) => handleVerifyDoc(doc.id, 'invalid', e)}
                           className={`flex-1 sm:flex-none px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
                             doc.status === 'invalid'
                               ? 'bg-rose-600 text-white shadow-sm'
@@ -235,19 +257,19 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
             {/* Overall Staff Remarks Input */}
             <div>
               <label className="block text-xs font-bold text-slate-800 mb-1">
-                Staff Inspection Summary & Recommendation Notes
+                Staff Inspection Summary Notes
               </label>
               <textarea
                 rows="3"
                 value={staffRemark}
                 onChange={(e) => setStaffRemark(e.target.value)}
-                placeholder="Add overall observations, verification remarks, or discrepancies found..."
+                placeholder="Add overall observations or verification remarks..."
                 className="w-full px-3 py-2 rounded-2xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
             </div>
           </div>
 
-          {/* Right Panel: Document Viewer (5 cols) */}
+          {/* Right Panel: Document Viewer */}
           <div className="lg:col-span-5 bg-slate-900 p-6 flex flex-col justify-between overflow-y-auto text-white">
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
@@ -263,12 +285,30 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
 
               {selectedDoc ? (
                 <div className="space-y-4">
-                  <div className="bg-slate-950 rounded-2xl border border-slate-800 p-2 overflow-hidden flex items-center justify-center min-h-[300px]">
-                    <img
-                      src={selectedDoc.fileUrl}
-                      alt={selectedDoc.name}
-                      className="max-h-[380px] object-contain rounded-xl shadow-lg"
-                    />
+                  <div className="bg-slate-950 rounded-2xl border border-slate-800 p-2 overflow-hidden flex flex-col items-center justify-center min-h-[350px]">
+                    {isPdfDoc(selectedDoc) ? (
+                      <div className="w-full h-full flex flex-col items-center">
+                        <iframe
+                          src={selectedDoc.fileUrl}
+                          className="w-full h-[320px] rounded-xl border border-slate-800 bg-white"
+                          title={selectedDoc.name}
+                        />
+                        <a
+                          href={selectedDoc.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 inline-flex items-center gap-1 text-[11px] font-semibold text-blue-400 hover:text-blue-300"
+                        >
+                          Open PDF in New Window <ExternalLink className="w-3 h-3" />
+                        </a>
+                      </div>
+                    ) : (
+                      <img
+                        src={selectedDoc.fileUrl}
+                        alt={selectedDoc.name}
+                        className="max-h-[350px] object-contain rounded-xl shadow-lg"
+                      />
+                    )}
                   </div>
                   <div className="text-xs text-slate-400">
                     <div>Filename: <strong className="text-slate-200">{selectedDoc.name}</strong></div>
@@ -284,7 +324,7 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
               )}
             </div>
 
-            {/* Bottom Recommendation Action Buttons */}
+            {/* Bottom Recommendation Actions */}
             <div className="pt-6 border-t border-slate-800 mt-6 space-y-3">
               {error && (
                 <div className="p-2.5 bg-rose-950/80 border border-rose-800 text-rose-200 text-xs rounded-xl">
@@ -292,19 +332,34 @@ export const DocumentReviewModal = ({ application, onClose, onSuccess }) => {
                 </div>
               )}
 
+              {!allDocsValid && (
+                <div className="p-2.5 bg-amber-950/70 border border-amber-800 text-amber-200 text-[11px] rounded-xl flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                  <span>"Recommend Approval" is locked until ALL documents are marked as Valid.</span>
+                </div>
+              )}
+
               <div className="text-xs font-bold text-slate-300">Final Verification Decision:</div>
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => handleRecommendation('reject')}
+                  type="button"
+                  onClick={(e) => handleRecommendation('reject', e)}
                   disabled={submitting}
                   className="px-4 py-3 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5 disabled:opacity-50"
                 >
                   <ThumbsDown className="w-4 h-4" /> Recommend Rejection
                 </button>
+                
                 <button
-                  onClick={() => handleRecommendation('approve')}
-                  disabled={submitting}
-                  className="px-4 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 transition flex items-center justify-center gap-1.5 disabled:opacity-50"
+                  type="button"
+                  onClick={(e) => handleRecommendation('approve', e)}
+                  disabled={submitting || !allDocsValid}
+                  title={!allDocsValid ? 'All documents must be marked Valid first' : ''}
+                  className={`px-4 py-3 rounded-2xl font-bold text-xs shadow-lg transition flex items-center justify-center gap-1.5 ${
+                    allDocsValid
+                      ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/25 cursor-pointer'
+                      : 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed'
+                  }`}
                 >
                   <ThumbsUp className="w-4 h-4" /> Recommend Approval
                 </button>

@@ -57,9 +57,9 @@ export const AuthProvider = ({ children }) => {
 
   // One-click demo role switcher helper for judges & evaluators
   const quickSwitchRole = async (targetRole) => {
-    let email = 'admin@scholarships.gov.in';
-    if (targetRole === 'staff') email = 'staff.sharma@scholarships.gov.in';
-    if (targetRole === 'student') email = 'rahul.verma@gmail.com';
+    let email = 'admin@bitsathy.ac.in';
+    if (targetRole === 'staff') email = 'staff.sharma@bitsathy.ac.in';
+    if (targetRole === 'student') email = 'rahul.verma@bitsathy.ac.in';
     return await login(email, 'password123');
   };
 

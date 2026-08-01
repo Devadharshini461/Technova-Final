@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { GraduationCap, Lock, Mail, ArrowRight, Sparkles, Shield, UserCheck } from 'lucide-react';
+import { GraduationCap, Lock, Mail, ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 
 export const LoginPage = () => {
   const { login, quickSwitchRole } = useContext(AuthContext);
@@ -16,13 +16,20 @@ export const LoginPage = () => {
     setLoading(true);
     setError('');
 
+    // Requirement #13 domain check
+    if (!email.toLowerCase().trim().endsWith('@bitsathy.ac.in')) {
+      setError('Access restricted! Only institutional emails ending with "@bitsathy.ac.in" can access the portal.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const user = await login(email, password);
       if (user.role === 'admin') navigate('/admin');
       else if (user.role === 'staff') navigate('/staff');
       else navigate('/student');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid email or password');
+      setError(err.response?.data?.message || 'Invalid institutional email or password');
     } finally {
       setLoading(false);
     }
@@ -43,19 +50,22 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 p-8 text-white text-center relative">
+        <div className="bg-gradient-to-r from-blue-950 via-indigo-900 to-slate-900 p-8 text-white text-center relative">
           <div className="w-12 h-12 rounded-2xl bg-blue-600/30 border border-blue-400/30 flex items-center justify-center mx-auto mb-3 text-white shadow-lg">
             <GraduationCap className="w-7 h-7" />
           </div>
-          <h2 className="text-2xl font-extrabold">ScholarPortal.gov</h2>
-          <p className="text-xs text-slate-300 mt-1">Single Sign-On Authentication Engine</p>
+          <h2 className="text-2xl font-extrabold tracking-tight">ScholarPortal.bitsathy</h2>
+          <p className="text-xs text-slate-300 mt-1">BIT Sathy Single Sign-On Authentication Engine</p>
+          <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+            <ShieldCheck className="w-3 h-3 text-emerald-400" /> Only @bitsathy.ac.in Authorized
+          </div>
         </div>
 
-        {/* Form */}
+        {/* Form Body */}
         <div className="p-8 space-y-6">
           
           {/* Quick Demo Login Preset Bar */}
@@ -89,14 +99,16 @@ export const LoginPage = () => {
           </div>
 
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
+            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-medium leading-relaxed">
               {error}
             </div>
           )}
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-xs font-bold text-slate-800 mb-1">Email Address</label>
+              <label className="block text-xs font-bold text-slate-800 mb-1">
+                Institutional Email (@bitsathy.ac.in)
+              </label>
               <div className="relative">
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <input
@@ -104,7 +116,7 @@ export const LoginPage = () => {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="student@gmail.com / staff / admin"
+                  placeholder="rahul.verma@bitsathy.ac.in"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -135,7 +147,7 @@ export const LoginPage = () => {
           </form>
 
           <div className="text-center text-xs text-slate-500 border-t border-slate-100 pt-4">
-            Don't have a student account?{' '}
+            Don't have a BIT Sathy student account?{' '}
             <Link to="/register" className="font-bold text-blue-600 hover:underline">
               Register Here
             </Link>

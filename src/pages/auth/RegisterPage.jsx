@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import { GraduationCap, ArrowRight, User, Mail, Lock, Phone, Building, CreditCard } from 'lucide-react';
+import { GraduationCap, ArrowRight, User, Mail, Lock, Phone, Building, ShieldCheck } from 'lucide-react';
 
 export const RegisterPage = () => {
   const { register } = useContext(AuthContext);
@@ -10,8 +10,8 @@ export const RegisterPage = () => {
     email: '',
     password: 'password123',
     phone: '',
-    college: '',
-    course: '',
+    college: 'Bannari Amman Institute of Technology (BIT Sathy)',
+    course: 'B.E Computer Science',
     year: '1st Year',
     marksPercentage: 85.0,
     familyIncome: 200000,
@@ -28,6 +28,13 @@ export const RegisterPage = () => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    // Requirement #13: Institutional email domain check
+    if (!formData.email.toLowerCase().trim().endsWith('@bitsathy.ac.in')) {
+      setError('Registration restricted! Only institutional email addresses ending with "@bitsathy.ac.in" are permitted.');
+      setLoading(false);
+      return;
+    }
 
     try {
       await register({
@@ -48,22 +55,25 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 py-12">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4 py-12">
       <div className="bg-white rounded-3xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 p-8 text-white text-center">
+        <div className="bg-gradient-to-r from-blue-950 via-indigo-900 to-slate-900 p-8 text-white text-center">
           <div className="w-12 h-12 rounded-2xl bg-blue-600/30 border border-blue-400/30 flex items-center justify-center mx-auto mb-3 text-white shadow-lg">
             <GraduationCap className="w-7 h-7" />
           </div>
-          <h2 className="text-2xl font-extrabold">Student Portal Registration</h2>
-          <p className="text-xs text-slate-300 mt-1">Create your verified student profile to discover and apply for scholarships</p>
+          <h2 className="text-2xl font-extrabold">BIT Sathy Student Portal Registration</h2>
+          <p className="text-xs text-slate-300 mt-1">Create your verified student profile with institutional email</p>
+          <div className="mt-2 inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">
+            <ShieldCheck className="w-3 h-3 text-emerald-400" /> Must end with @bitsathy.ac.in
+          </div>
         </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-8 space-y-6 text-xs">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl">
+            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl font-medium leading-relaxed">
               {error}
             </div>
           )}
@@ -71,7 +81,7 @@ export const RegisterPage = () => {
           {/* Account Details */}
           <div>
             <h3 className="font-bold text-slate-900 text-sm mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
-              <User className="w-4 h-4 text-blue-600" /> Account Security Credentials
+              <User className="w-4 h-4 text-blue-600" /> Institutional Credentials
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -86,13 +96,13 @@ export const RegisterPage = () => {
                 />
               </div>
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Email Address</label>
+                <label className="block font-bold text-slate-800 mb-1">BIT Sathy Email (@bitsathy.ac.in)</label>
                 <input
                   type="email"
                   required
                   value={formData.email}
                   onChange={e => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="rahul.verma@gmail.com"
+                  placeholder="rahul.verma@bitsathy.ac.in"
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -133,7 +143,6 @@ export const RegisterPage = () => {
                   required
                   value={formData.college}
                   onChange={e => setFormData({ ...formData, college: e.target.value })}
-                  placeholder="Indian Institute of Technology, Delhi"
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -144,7 +153,7 @@ export const RegisterPage = () => {
                   required
                   value={formData.course}
                   onChange={e => setFormData({ ...formData, course: e.target.value })}
-                  placeholder="B.Tech Computer Science"
+                  placeholder="B.E Computer Science"
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
               </div>
@@ -191,7 +200,7 @@ export const RegisterPage = () => {
             disabled={loading}
             className="w-full py-3 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/25 transition flex items-center justify-center gap-1.5 disabled:opacity-50"
           >
-            {loading ? 'Registering Account...' : 'Complete Student Registration'} <ArrowRight className="w-4 h-4" />
+            {loading ? 'Registering Account...' : 'Complete BIT Sathy Registration'} <ArrowRight className="w-4 h-4" />
           </button>
 
           <div className="text-center text-xs text-slate-500 border-t border-slate-100 pt-4">

@@ -5,7 +5,6 @@ const path = require('path');
 const { readDB, writeDB } = require('../db');
 const { verifyToken, requireRole } = require('../middleware/auth');
 
-// Multer storage setup for handling document file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.join(__dirname, '../uploads');
@@ -24,38 +23,38 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+  limits: { fileSize: 5 * 1024 * 1024 }
 });
 
-// Helper for Auto Eligibility Check Engine
+// Auto Eligibility Check Engine
 function runAutoEligibilityCheck(studentData, schemeData) {
   const reasons = [];
   let passed = true;
 
   const studentMarks = parseFloat(studentData.marksPercentage) || 0;
-  const reqMinMarks = schemeData.eligibilityRules.minPercentage || 0;
+  const reqMinMarks = schemeData.eligibilityRules?.minPercentage || 0;
   if (studentMarks >= reqMinMarks) {
-    reasons.push(`Academic Marks: ${studentMarks}% meets/exceeds required minimum ${reqMinMarks}%`);
+    reasons.push(`Academic Marks: ${studentMarks}% meets minimum ${reqMinMarks}%`);
   } else {
     passed = false;
-    reasons.push(`Academic Marks: ${studentMarks}% is below required minimum ${reqMinMarks}%`);
+    reasons.push(`Academic Marks: ${studentMarks}% is BELOW minimum requirement ${reqMinMarks}%`);
   }
 
   const studentIncome = parseFloat(studentData.familyIncome) || 0;
-  const reqMaxIncome = schemeData.eligibilityRules.maxFamilyIncome || 1000000;
+  const reqMaxIncome = schemeData.eligibilityRules?.maxFamilyIncome || 1000000;
   if (studentIncome <= reqMaxIncome) {
-    reasons.push(`Annual Family Income: ₹${studentIncome.toLocaleString()} is within ceiling limit ₹${reqMaxIncome.toLocaleString()}`);
+    reasons.push(`Annual Family Income: ₹${studentIncome.toLocaleString()} is within limit ₹${reqMaxIncome.toLocaleString()}`);
   } else {
     passed = false;
-    reasons.push(`Annual Family Income: ₹${studentIncome.toLocaleString()} exceeds ceiling limit ₹${reqMaxIncome.toLocaleString()}`);
+    reasons.push(`Annual Family Income: ₹${studentIncome.toLocaleString()} EXCEEDS maximum limit ₹${reqMaxIncome.toLocaleString()}`);
   }
 
-  const allowedCats = schemeData.eligibilityRules.allowedCategories || [];
+  const allowedCats = schemeData.eligibilityRules?.allowedCategories || [];
   if (allowedCats.length === 0 || allowedCats.includes(studentData.category)) {
-    reasons.push(`Category: Applicant category (${studentData.category}) is eligible for this scheme`);
+    reasons.push(`Category: Applicant category (${studentData.category}) is eligible`);
   } else {
     passed = false;
-    reasons.push(`Category: Applicant category (${studentData.category}) is not eligible (Allowed: ${allowedCats.join(', ')})`);
+    reasons.push(`Category: Applicant category (${studentData.category}) NOT eligible (Allowed: ${allowedCats.join(', ')})`);
   }
 
   return { passed, reasons };
@@ -74,12 +73,15 @@ router.get('/', verifyToken, requireRole(['admin', 'staff']), (req, res) => {
   const db = readDB();
   let list = [...db.applications];
 
-  if (status) {
-    list = list.filter(a => a.status === status);
+  // If staff is querying, filter by assigned staff id (Requirement #9)
+  if (req.user.role === 'staff') {
+    list = list.filter(a => a.assignedStaffId === req.user.id);
+  } else if (staffId) {
+    list = list.filter(a => a.assignedStaffId === staffId);
   }
 
-  if (staffId) {
-    list = list.filter(a => a.assignedStaffId === staffId);
+  if (status) {
+    list = list.filter(a => a.status === status);
   }
 
   if (search) {
@@ -90,6 +92,25 @@ router.get('/', verifyToken, requireRole(['admin', 'staff']), (req, res) => {
       a.id.toLowerCase().includes(q)
     );
   }
+
+  // Requirement #11: Priority Sorting based on student's total application count
+  // Calculate student total application count map
+  const studentAppCounts = {};
+  db.applications.forEach(a => {
+    studentAppCounts[a.studentId] = (studentAppCounts[a.studentId] || 0) + 1;
+  });
+
+  list = list.map(a => {
+    const count = studentAppCounts[a.studentId] || 1;
+    return {
+      ...a,
+      studentTotalApps: count,
+      isLowPriority: count >= 2 // Students with max application count marked as low priority
+    };
+  });
+
+  // Sort list: Normal priority first (lower app count), low priority (higher app count) at bottom
+  list.sort((a, b) => (a.studentTotalApps || 0) - (b.studentTotalApps || 0));
 
   res.json(list);
 });
@@ -103,9 +124,8 @@ router.get('/:id', verifyToken, (req, res) => {
     return res.status(404).json({ message: 'Application not found' });
   }
 
-  // Security check: Students can only view their own
   if (req.user.role === 'student' && app.studentId !== req.user.id) {
-    return res.status(403).json({ message: 'Access denied to this application' });
+    return res.status(403).json({ message: 'Access denied' });
   }
 
   res.json(app);
@@ -125,8 +145,10 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
     return res.status(404).json({ message: 'Scholarship scheme not found' });
   }
 
-  if (scheme.status === 'closed') {
-    return res.status(400).json({ message: 'This scholarship scheme is closed' });
+  // Requirement #4: Deadline check
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (scheme.deadline && scheme.deadline < todayStr) {
+    return res.status(400).json({ message: 'This scholarship application deadline has expired' });
   }
 
   // Check existing submission
@@ -135,14 +157,18 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
     return res.status(400).json({ message: 'You have already submitted an application for this scholarship' });
   }
 
-  // Auto assign staff member round-robin
-  const staffMembers = db.users.filter(u => u.role === 'staff');
-  let assignedStaff = staffMembers[0] || { id: 'u-staff-1', name: 'Verification Officer' };
-  if (staffMembers.length > 0) {
-    assignedStaff = staffMembers[db.applications.length % staffMembers.length];
+  // Requirement #9: Route application ONLY to assigned Staff Officer for this scheme
+  let assignedStaffId = scheme.assignedStaffId;
+  let assignedStaffName = scheme.assignedStaffName || 'Verification Officer';
+  if (!assignedStaffId) {
+    const staffMembers = db.users.filter(u => u.role === 'staff');
+    if (staffMembers.length > 0) {
+      const assigned = staffMembers[0];
+      assignedStaffId = assigned.id;
+      assignedStaffName = assigned.name;
+    }
   }
 
-  // Build document list from files or default placeholders
   const reqDocs = scheme.requiredDocuments || ['Marksheet', 'Income Certificate', 'ID Proof'];
   const uploadedFiles = req.files || [];
 
@@ -150,9 +176,9 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
     const file = uploadedFiles[index];
     return {
       id: `doc-${Date.now()}-${index}`,
-      name: file ? file.originalname : `${docType} - Uploaded Copy.pdf`,
+      name: file ? file.originalname : `${docType} Copy.pdf`,
       type: docType,
-      fileUrl: file ? `/uploads/${file.filename}` : 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=600&auto=format&fit=crop&q=60',
+      fileUrl: file ? `/uploads/${file.filename}` : 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
       status: 'pending',
       remark: ''
     };
@@ -166,6 +192,15 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
 
   const autoCheck = runAutoEligibilityCheck(studentData, scheme);
 
+  // Requirement #12: If Auto Eligibility Check FAILS:
+  // - DO NOT reach staff queue.
+  // - Mark status as 'rejected' immediately.
+  // - Send notification to student explicitly detailing failed criteria.
+  let initialStatus = 'under_review';
+  if (!autoCheck.passed) {
+    initialStatus = 'rejected';
+  }
+
   const newApp = {
     id: `app-${Date.now()}`,
     scholarshipId: scheme.id,
@@ -176,20 +211,20 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
     studentName: req.user.name,
     studentEmail: req.user.email,
     studentPhone: req.user.phone || '+91 98765 43210',
-    college: college || req.user.college || 'State University',
-    course: course || req.user.course || 'Undergraduate Degree',
+    college: college || req.user.college || 'BIT Sathy',
+    course: course || req.user.course || 'B.E Degree',
     year: year || req.user.year || '1st Year',
     marksPercentage: studentData.marksPercentage,
     familyIncome: studentData.familyIncome,
     category: studentData.category,
     bankDetails: typeof bankDetails === 'string' ? JSON.parse(bankDetails) : (bankDetails || req.user.bankDetails || {}),
-    assignedStaffId: assignedStaff.id,
-    assignedStaffName: assignedStaff.name,
-    status: 'under_review',
+    assignedStaffId,
+    assignedStaffName,
+    status: initialStatus,
     documents,
     autoEligibilityCheck: autoCheck,
-    staffRemarks: '',
-    staffRecommendation: '',
+    staffRemarks: !autoCheck.passed ? 'System Auto-Check Failed: Automatically Rejected' : '',
+    staffRecommendation: !autoCheck.passed ? 'recommend_reject' : '',
     adminRemarks: '',
     disbursementDetails: null,
     submittedAt: new Date().toISOString(),
@@ -199,30 +234,45 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
   db.applications.unshift(newApp);
   scheme.appliedCount = (scheme.appliedCount || 0) + 1;
 
-  // Audit log & Notification
+  // Audit Log
   db.auditLogs.unshift({
     id: `log-${Date.now()}`,
     actorName: req.user.name,
     actorRole: 'student',
-    action: 'APPLICATION_SUBMIT',
-    details: `Submitted application ${newApp.id} for scheme "${scheme.title}"`,
+    action: autoCheck.passed ? 'APPLICATION_SUBMIT' : 'AUTO_CHECK_REJECT',
+    details: autoCheck.passed 
+      ? `Submitted application ${newApp.id} for "${scheme.title}" (Assigned to Staff: ${assignedStaffName})`
+      : `Application ${newApp.id} Auto-Rejected due to criteria mismatch: ${autoCheck.reasons.join('; ')}`,
     timestamp: new Date().toISOString()
   });
 
-  db.notifications.unshift({
-    id: `notif-${Date.now()}`,
-    userId: req.user.id,
-    title: 'Application Submitted',
-    message: `Your application (${newApp.id}) for ${scheme.title} was received and assigned to ${assignedStaff.name} for verification.`,
-    isRead: false,
-    createdAt: new Date().toISOString()
-  });
+  // Notification for Student (Requirement #12)
+  if (!autoCheck.passed) {
+    const failedCriteriaStr = autoCheck.reasons.filter(r => r.includes('BELOW') || r.includes('EXCEEDS') || r.includes('NOT')).join(' | ');
+    db.notifications.unshift({
+      id: `notif-${Date.now()}`,
+      userId: req.user.id,
+      title: 'Application Rejected (Auto-Eligibility Check)',
+      message: `Your application (${newApp.id}) for ${scheme.title} was automatically rejected because criteria were not met: ${failedCriteriaStr}`,
+      isRead: false,
+      createdAt: new Date().toISOString()
+    });
+  } else {
+    db.notifications.unshift({
+      id: `notif-${Date.now()}`,
+      userId: req.user.id,
+      title: 'Application Submitted Successfully',
+      message: `Your application (${newApp.id}) for ${scheme.title} was received and assigned to ${assignedStaffName} for document verification.`,
+      isRead: false,
+      createdAt: new Date().toISOString()
+    });
+  }
 
   writeDB(db);
   res.status(201).json(newApp);
 });
 
-// PATCH /api/applications/:id/documents/:docId - Staff verify individual document
+// PATCH /api/applications/:id/documents/:docId - Staff verify document
 router.patch('/:id/documents/:docId', verifyToken, requireRole(['staff', 'admin']), (req, res) => {
   const { status, remark } = req.body;
   if (!['valid', 'invalid', 'needs_resubmission'].includes(status)) {
@@ -244,7 +294,6 @@ router.patch('/:id/documents/:docId', verifyToken, requireRole(['staff', 'admin'
   doc.remark = remark || '';
   app.updatedAt = new Date().toISOString();
 
-  // If any document is flagged as invalid or needs resubmission, notify student
   if (status === 'invalid' || status === 'needs_resubmission') {
     db.notifications.unshift({
       id: `notif-${Date.now()}`,
@@ -262,7 +311,7 @@ router.patch('/:id/documents/:docId', verifyToken, requireRole(['staff', 'admin'
 
 // PATCH /api/applications/:id/recommend - Staff submit recommendation
 router.patch('/:id/recommend', verifyToken, requireRole(['staff', 'admin']), (req, res) => {
-  const { decision, remark } = req.body; // decision = 'approve' | 'reject'
+  const { decision, remark } = req.body;
   if (!['approve', 'reject'].includes(decision)) {
     return res.status(400).json({ message: 'Decision must be approve or reject' });
   }
@@ -271,6 +320,16 @@ router.patch('/:id/recommend', verifyToken, requireRole(['staff', 'admin']), (re
   const app = db.applications.find(a => a.id === req.params.id);
   if (!app) {
     return res.status(404).json({ message: 'Application not found' });
+  }
+
+  // Requirement #7: Only when ALL documents are valid can recommend approval be submitted
+  if (decision === 'approve') {
+    const allValid = app.documents.every(d => d.status === 'valid');
+    if (!allValid) {
+      return res.status(400).json({ 
+        message: 'Cannot recommend approval until ALL mandatory documents are marked as Valid' 
+      });
+    }
   }
 
   app.staffRemarks = remark || '';
@@ -287,17 +346,15 @@ router.patch('/:id/recommend', verifyToken, requireRole(['staff', 'admin']), (re
     app.status = 'rejected';
   }
 
-  // Audit log
   db.auditLogs.unshift({
     id: `log-${Date.now()}`,
     actorName: req.user.name,
     actorRole: req.user.role,
     action: 'STAFF_RECOMMEND',
-    details: `Staff recommended ${decision.toUpperCase()} for Application ${app.id} (${app.studentName}). Routed to status: ${app.status}`,
+    details: `Staff recommended ${decision.toUpperCase()} for Application ${app.id} (${app.studentName}). Routed status: ${app.status}`,
     timestamp: new Date().toISOString()
   });
 
-  // Notification for student
   db.notifications.unshift({
     id: `notif-${Date.now()}`,
     userId: app.studentId,
@@ -383,7 +440,7 @@ router.patch('/:id/reject', verifyToken, requireRole(['admin']), (req, res) => {
 
 // PATCH /api/applications/:id/override - Admin override staff decision
 router.patch('/:id/override', verifyToken, requireRole(['admin']), (req, res) => {
-  const { decision, justification } = req.body; // decision = 'approved' | 'rejected'
+  const { decision, justification } = req.body;
   if (!justification || justification.trim().length < 5) {
     return res.status(400).json({ message: 'Mandatory justification statement required for Admin Override' });
   }
@@ -404,17 +461,8 @@ router.patch('/:id/override', verifyToken, requireRole(['admin']), (req, res) =>
     actorName: req.user.name,
     actorRole: 'admin',
     action: 'ADMIN_OVERRIDE',
-    details: `ADMIN OVERRIDE on App ${app.id}: Changed status from "${previousStatus}" to "${app.status}". Mandatory Justification: "${justification}"`,
+    details: `ADMIN OVERRIDE on App ${app.id}: Changed status from "${previousStatus}" to "${app.status}". Justification: "${justification}"`,
     timestamp: new Date().toISOString()
-  });
-
-  db.notifications.unshift({
-    id: `notif-${Date.now()}`,
-    userId: app.studentId,
-    title: 'Application Status Updated (Executive Review)',
-    message: `Your application ${app.id} status was revised to ${app.status} following executive review.`,
-    isRead: false,
-    createdAt: new Date().toISOString()
   });
 
   writeDB(db);
@@ -433,7 +481,7 @@ router.patch('/:id/disburse', verifyToken, requireRole(['admin']), (req, res) =>
     return res.status(400).json({ message: 'Only approved applications can be marked as disbursed' });
   }
 
-  const txnId = `TXN-NPCI-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
+  const txnId = `TXN-BIT-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
   app.status = 'disbursed';
   app.disbursementDetails = {
     transactionId: txnId,
@@ -457,7 +505,7 @@ router.patch('/:id/disburse', verifyToken, requireRole(['admin']), (req, res) =>
     id: `notif-${Date.now()}`,
     userId: app.studentId,
     title: 'Funds Disbursed! 💰',
-    message: `Scholarship grant of ₹${app.scholarshipAmount.toLocaleString()} has been transferred to your bank account (${app.bankDetails ? app.bankDetails.accountNo : 'Registered Bank'}). Txn ID: ${txnId}`,
+    message: `Scholarship grant of ₹${app.scholarshipAmount.toLocaleString()} has been transferred to your bank account. Txn ID: ${txnId}`,
     isRead: false,
     createdAt: new Date().toISOString()
   });
