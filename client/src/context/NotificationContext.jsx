@@ -24,8 +24,22 @@ export const NotificationProvider = ({ children }) => {
   const fetchNotifications = async () => {
     try {
       const res = await axios.get('/api/notifications/my');
-      setNotifications(res.data);
-      setUnreadCount(res.data.filter(n => !n.isRead).length);
+      const newNotifs = res.data;
+      const newUnread = newNotifs.filter(n => !n.isRead).length;
+
+      setNotifications(prev => {
+        if (JSON.stringify(prev) === JSON.stringify(newNotifs)) {
+          return prev;
+        }
+        return newNotifs;
+      });
+
+      setUnreadCount(prev => {
+        if (prev === newUnread) {
+          return prev;
+        }
+        return newUnread;
+      });
     } catch (err) {
       // Silent error
     }

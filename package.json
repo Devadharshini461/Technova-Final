@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "start": "node server/index.js",
-    "dev": "concurrently \"node server/index.js\" \"vite\"",
+    "dev": "concurrently \"node server/index.js\" \"vite client\"",
     "server": "node server/index.js",
-    "client": "vite",
-    "build": "vite build",
-    "vercel-build": "vite build",
-    "preview": "vite preview"
+    "client": "vite client",
+    "build": "vite build client",
+    "vercel-build": "vite build client",
+    "preview": "vite preview client"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

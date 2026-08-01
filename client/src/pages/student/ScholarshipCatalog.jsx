@@ -45,13 +45,13 @@ export const ScholarshipCatalog = () => {
           <div className="absolute right-0 top-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -mr-20 -mt-20"></div>
           <div className="relative z-10 max-w-2xl">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30 mb-4">
-              <Sparkles className="w-3.5 h-3.5" /> 2026 Active Financial Aid Programs
+              <Sparkles className="w-3.5 h-3.5" /> BIT Scholarship Portal
             </span>
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl mb-3">
-              Discover & Apply for Verified Scholarships
+              Smart Scholarship Management System
             </h1>
             <p className="text-slate-300 text-sm leading-relaxed">
-              Explore government and corporate sponsored grant programs with automated eligibility validation, transparent verification timelines, and direct bank disbursement.
+              AI-powered eligibility checks, secure verification, and real-time scholarship tracking
             </p>
           </div>
         </div>

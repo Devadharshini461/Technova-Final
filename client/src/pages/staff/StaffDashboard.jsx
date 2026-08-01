@@ -244,9 +244,14 @@ export const StaffDashboard = () => {
           application={selectedApp}
           onClose={() => setSelectedApp(null)}
           onUpdateDoc={handleAppUpdate}
-          onSuccess={() => {
+          onSuccess={(updatedApp) => {
             setSelectedApp(null);
-            fetchData(false);
+            if (updatedApp && updatedApp.id) {
+              setApplications(prev => prev.map(a => a.id === updatedApp.id ? updatedApp : a));
+              axios.get('/api/staff/stats').then(res => setStats(res.data)).catch(console.error);
+            } else {
+              fetchData(false);
+            }
           }}
         />
       )}

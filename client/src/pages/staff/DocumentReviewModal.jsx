@@ -30,7 +30,7 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
 
       const updatedDoc = res.data.documents.find(d => d.id === docId);
       if (updatedDoc) {
-        setSelectedDoc(prev => (prev && prev.id === docId ? { ...prev, status: updatedDoc.status, remark: updatedDoc.remark } : updatedDoc));
+        setSelectedDoc(updatedDoc);
       }
     } catch (err) {
       console.error(err);
@@ -44,11 +44,11 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
     setError('');
 
     try {
-      await axios.patch(`/api/applications/${appData.id}/recommend`, {
+      const res = await axios.patch(`/api/applications/${appData.id}/recommend`, {
         decision,
         remark: staffRemark
       });
-      onSuccess();
+      onSuccess(res.data);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to submit recommendation');
     } finally {

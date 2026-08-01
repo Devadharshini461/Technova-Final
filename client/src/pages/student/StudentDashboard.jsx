@@ -18,11 +18,15 @@ export const StudentDashboard = () => {
   const [activeAppForResubmit, setActiveAppForResubmit] = useState(null);
 
   useEffect(() => {
-    fetchMyApplications();
+    fetchMyApplications(true);
+    const interval = setInterval(() => fetchMyApplications(false), 10000);
+    return () => clearInterval(interval);
   }, []);
 
-  const fetchMyApplications = async () => {
-    setLoading(true);
+  const fetchMyApplications = async (isInitial = false) => {
+    if (isInitial && applications.length === 0) {
+      setLoading(true);
+    }
     try {
       const res = await axios.get('/api/applications/my');
       setApplications(res.data);

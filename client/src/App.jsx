@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { Navbar } from './components/Navbar';
@@ -14,7 +14,7 @@ import { StaffDashboard } from './pages/staff/StaffDashboard';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 
 // Protected Workspace Shell layout with Top Navbar and Left Sidebar
-const WorkspaceLayout = ({ children, allowedRoles }) => {
+const WorkspaceLayout = ({ allowedRoles }) => {
   const { user, loading } = useContext(AuthContext);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
@@ -50,7 +50,7 @@ const WorkspaceLayout = ({ children, allowedRoles }) => {
 
         {/* Main Content Workspace (No Footer as per Requirement #8) */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>
@@ -84,43 +84,20 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
 
             {/* Student Routes */}
-            <Route
-              path="/student/*"
-              element={
-                <WorkspaceLayout allowedRoles={['student']}>
-                  <ScholarshipCatalog />
-                </WorkspaceLayout>
-              }
-            />
-
-            <Route
-              path="/student/my-applications"
-              element={
-                <WorkspaceLayout allowedRoles={['student']}>
-                  <StudentDashboard />
-                </WorkspaceLayout>
-              }
-            />
+            <Route path="/student/*" element={<WorkspaceLayout allowedRoles={['student']} />}>
+              <Route index element={<ScholarshipCatalog />} />
+              <Route path="my-applications" element={<StudentDashboard />} />
+            </Route>
 
             {/* Staff Routes */}
-            <Route
-              path="/staff/*"
-              element={
-                <WorkspaceLayout allowedRoles={['staff', 'admin']}>
-                  <StaffDashboard />
-                </WorkspaceLayout>
-              }
-            />
+            <Route path="/staff/*" element={<WorkspaceLayout allowedRoles={['staff', 'admin']} />}>
+              <Route path="*" element={<StaffDashboard />} />
+            </Route>
 
             {/* Admin Routes */}
-            <Route
-              path="/admin/*"
-              element={
-                <WorkspaceLayout allowedRoles={['admin']}>
-                  <AdminDashboard />
-                </WorkspaceLayout>
-              }
-            />
+            <Route path="/admin/*" element={<WorkspaceLayout allowedRoles={['admin']} />}>
+              <Route path="*" element={<AdminDashboard />} />
+            </Route>
 
             {/* Fallback Catch-All */}
             <Route path="*" element={<Navigate to="/" replace />} />
@@ -130,3 +107,4 @@ export default function App() {
     </AuthProvider>
   );
 }
+

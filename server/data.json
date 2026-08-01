@@ -73,6 +73,27 @@
         "accountHolder": "Ananya Deshmukh"
       },
       "createdAt": "2026-08-01T00:22:55.817Z"
+    },
+    {
+      "id": "u-student-1785574138707",
+      "name": "Deva",
+      "email": "deva@bitsathy.ac.in",
+      "password": "$2b$10$4YG548ZjIx6crYOydLTQ3O54DVC1kjC/Dei8pGt6RP0hEYI0N9D0.",
+      "role": "student",
+      "phone": "+91 9638527410",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "2nd Year",
+      "marksPercentage": 85,
+      "familyIncome": 80000,
+      "category": "General",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Devadharshini"
+      },
+      "createdAt": "2026-08-01T08:48:58.945Z"
     }
   ],
   "scholarships": [
@@ -183,7 +204,7 @@
       "amount": 50000,
       "deadline": "2026-09-15",
       "seats": 2000,
-      "appliedCount": 890,
+      "appliedCount": 892,
       "status": "active",
       "requiresAdminApproval": false,
       "assignedStaffId": "u-staff-2",
@@ -272,6 +293,160 @@
   ],
   "applications": [
     {
+      "id": "app-1785574236469",
+      "scholarshipId": "sch-102",
+      "scholarshipTitle": "Pragati Scholarship for Girls (Technical Education)",
+      "scholarshipAmount": 50000,
+      "requiresAdminApproval": false,
+      "studentId": "u-student-1785574138707",
+      "studentName": "Deva",
+      "studentEmail": "deva@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "2nd Year",
+      "marksPercentage": 85,
+      "familyIncome": 80000,
+      "category": "General",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Devadharshini"
+      },
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee (Senior Inspector)",
+      "status": "disbursed",
+      "documents": [
+        {
+          "id": "doc-1785574236469-0",
+          "name": "Admin.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785574236145-437463253.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574236469-1",
+          "name": "MODULES.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785574236227-839737374.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574236469-2",
+          "name": "staff.pdf",
+          "type": "College ID",
+          "fileUrl": "/uploads/documents-1785574236318-385821802.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574236469-3",
+          "name": "MODULES.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785574236386-251350874.pdf",
+          "status": "valid",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 85% meets minimum 70%",
+          "Annual Family Income: ₹80,000 is within limit ₹8,00,000",
+          "Category: Applicant category (General) is eligible"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "recommend_approve",
+      "adminRemarks": "",
+      "disbursementDetails": {
+        "transactionId": "TXN-BIT-1785576763358-9954",
+        "amount": 50000,
+        "disbursedDate": "2026-08-01T09:32:43.358Z",
+        "bankAccount": "309812345678",
+        "ifsc": "SBIN0001234"
+      },
+      "submittedAt": "2026-08-01T08:50:36.469Z",
+      "updatedAt": "2026-08-01T09:32:43.358Z"
+    },
+    {
+      "id": "app-1785574016417",
+      "scholarshipId": "sch-102",
+      "scholarshipTitle": "Pragati Scholarship for Girls (Technical Education)",
+      "scholarshipAmount": 50000,
+      "requiresAdminApproval": false,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 18000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee (Senior Inspector)",
+      "status": "under_review",
+      "documents": [
+        {
+          "id": "doc-1785574016414-0",
+          "name": "student dashboard.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785574016030-8196352.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574016414-1",
+          "name": "Admin.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785574016115-201515170.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574016414-2",
+          "name": "MODULES.pdf",
+          "type": "College ID",
+          "fileUrl": "/uploads/documents-1785574016189-806254268.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785574016414-3",
+          "name": "staff.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785574016309-119692312.pdf",
+          "status": "pending",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 88.5% meets minimum 70%",
+          "Annual Family Income: ₹18,000 is within limit ₹8,00,000",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-08-01T08:46:56.418Z",
+      "updatedAt": "2026-08-01T08:46:56.418Z"
+    },
+    {
       "id": "app-1785571464197",
       "scholarshipId": "sch-1785566631133",
       "scholarshipTitle": "CGPA",
@@ -295,14 +470,14 @@
       },
       "assignedStaffId": "u-staff-1",
       "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
-      "status": "under_review",
+      "status": "pending_admin_approval",
       "documents": [
         {
           "id": "doc-1785571464112-0",
           "name": "student dashboard.pdf",
           "type": "Marksheet",
           "fileUrl": "/uploads/documents-1785571463790-904873498.pdf",
-          "status": "invalid",
+          "status": "valid",
           "remark": ""
         },
         {
@@ -310,7 +485,7 @@
           "name": "Admin.pdf",
           "type": "Income Certificate",
           "fileUrl": "/uploads/documents-1785571463864-378694792.pdf",
-          "status": "pending",
+          "status": "valid",
           "remark": ""
         },
         {
@@ -318,7 +493,7 @@
           "name": "staff.pdf",
           "type": "ID Proof",
           "fileUrl": "/uploads/documents-1785571463986-46027607.pdf",
-          "status": "pending",
+          "status": "valid",
           "remark": ""
         },
         {
@@ -326,7 +501,7 @@
           "name": "MODULES.pdf",
           "type": "Bank Passbook Copy",
           "fileUrl": "/uploads/documents-1785571464049-945701551.pdf",
-          "status": "pending",
+          "status": "valid",
           "remark": ""
         }
       ],
@@ -339,11 +514,11 @@
         ]
       },
       "staffRemarks": "",
-      "staffRecommendation": "",
+      "staffRecommendation": "recommend_approve",
       "adminRemarks": "",
       "disbursementDetails": null,
       "submittedAt": "2026-08-01T08:04:24.197Z",
-      "updatedAt": "2026-08-01T08:07:59.600Z"
+      "updatedAt": "2026-08-01T08:47:13.113Z"
     },
     {
       "id": "app-1785566700455",
@@ -851,6 +1026,54 @@
   ],
   "auditLogs": [
     {
+      "id": "log-1785576763358",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "FUND_DISBURSEMENT",
+      "details": "Disbursed ₹50,000 to Deva for App app-1785574236469. Txn Ref: TXN-BIT-1785576763358-9954",
+      "timestamp": "2026-08-01T09:32:43.358Z"
+    },
+    {
+      "id": "log-1785576632536",
+      "actorName": "Priya Mukherjee (Senior Inspector)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-1785574236469 (Deva). Routed status: approved",
+      "timestamp": "2026-08-01T09:30:32.537Z"
+    },
+    {
+      "id": "log-1785574236469",
+      "actorName": "Deva",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785574236469 for \"Pragati Scholarship for Girls (Technical Education)\" (Assigned to Staff: Priya Mukherjee (Senior Inspector))",
+      "timestamp": "2026-08-01T08:50:36.469Z"
+    },
+    {
+      "id": "log-1785574138945",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "STUDENT_CREATE",
+      "details": "Admin added new Student account: Deva (deva@bitsathy.ac.in)",
+      "timestamp": "2026-08-01T08:48:58.945Z"
+    },
+    {
+      "id": "log-1785574033113",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-1785571464197 (Rahul Verma). Routed status: pending_admin_approval",
+      "timestamp": "2026-08-01T08:47:13.113Z"
+    },
+    {
+      "id": "log-1785574016418",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785574016417 for \"Pragati Scholarship for Girls (Technical Education)\" (Assigned to Staff: Priya Mukherjee (Senior Inspector))",
+      "timestamp": "2026-08-01T08:46:56.418Z"
+    },
+    {
       "id": "log-1785571464197",
       "actorName": "Rahul Verma",
       "actorRole": "student",
@@ -1004,6 +1227,102 @@
     }
   ],
   "notifications": [
+    {
+      "id": "notif-1785576763358",
+      "userId": "u-student-1785574138707",
+      "title": "Funds Disbursed! 💰",
+      "message": "Scholarship grant of ₹50,000 has been transferred to your bank account. Txn ID: TXN-BIT-1785576763358-9954",
+      "isRead": false,
+      "createdAt": "2026-08-01T09:32:43.358Z"
+    },
+    {
+      "id": "notif-1785576632537",
+      "userId": "u-student-1785574138707",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Priya Mukherjee (Senior Inspector) finished verifying application app-1785574236469. Status updated to: approved.",
+      "isRead": false,
+      "createdAt": "2026-08-01T09:30:32.537Z"
+    },
+    {
+      "id": "notif-1785576624310",
+      "userId": "u-student-1785574138707",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785574236469 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T09:30:24.310Z"
+    },
+    {
+      "id": "notif-1785575385705",
+      "userId": "u-student-1785574138707",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785574236469 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T09:09:45.705Z"
+    },
+    {
+      "id": "notif-1785574236469",
+      "userId": "u-student-1785574138707",
+      "title": "Application Submitted Successfully",
+      "message": "Your application (app-1785574236469) for Pragati Scholarship for Girls (Technical Education) was received and assigned to Priya Mukherjee (Senior Inspector) for document verification.",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:50:36.469Z"
+    },
+    {
+      "id": "notif-1785574033113",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785571464197. Status updated to: pending admin_approval.",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:47:13.113Z"
+    },
+    {
+      "id": "notif-1785574016418",
+      "userId": "u-student-1",
+      "title": "Application Submitted Successfully",
+      "message": "Your application (app-1785574016417) for Pragati Scholarship for Girls (Technical Education) was received and assigned to Priya Mukherjee (Senior Inspector) for document verification.",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:46:56.418Z"
+    },
+    {
+      "id": "notif-1785573425259",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:37:05.259Z"
+    },
+    {
+      "id": "notif-1785573221979",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T08:33:41.979Z"
+    },
+    {
+      "id": "notif-1785573087689",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T08:31:27.689Z"
+    },
+    {
+      "id": "notif-1785572342616",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785571464197 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:19:02.616Z"
+    },
+    {
+      "id": "notif-1785572222962",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785571464197 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": false,
+      "createdAt": "2026-08-01T08:17:02.962Z"
+    },
     {
       "id": "notif-1785571679600",
       "userId": "u-student-1",

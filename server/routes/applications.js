@@ -366,11 +366,25 @@ router.patch('/:id/recommend', verifyToken, requireRole(['staff', 'admin']), (re
     timestamp: new Date().toISOString()
   });
 
+  let notifTitle = 'Verification Status Updated';
+  let notifMsg = `Staff officer ${req.user.name} finished verifying application ${app.id}. Status updated to: ${app.status.replace('_', ' ')}.`;
+
+  if (app.status === 'approved') {
+    notifTitle = 'Scholarship Approved! 🎉';
+    notifMsg = `Congratulations! Your application ${app.id} for ${app.scholarshipTitle} has been verified and approved by staff. It has moved to the fund distribution queue so you can receive your award.`;
+  } else if (app.status === 'pending_admin_approval') {
+    notifTitle = 'Document Verification Passed';
+    notifMsg = `Staff officer ${req.user.name} verified your application ${app.id}. It is now awaiting final executive admin clearance.`;
+  } else if (app.status === 'rejected') {
+    notifTitle = 'Application Rejected';
+    notifMsg = `Your application ${app.id} for ${app.scholarshipTitle} was marked as rejected during document verification. Remark: "${remark || 'Criteria not met'}".`;
+  }
+
   db.notifications.unshift({
     id: `notif-${Date.now()}`,
     userId: app.studentId,
-    title: 'Verification Status Updated',
-    message: `Staff officer ${req.user.name} finished verifying application ${app.id}. Status updated to: ${app.status.replace('_', ' ')}.`,
+    title: notifTitle,
+    message: notifMsg,
     isRead: false,
     createdAt: new Date().toISOString()
   });
