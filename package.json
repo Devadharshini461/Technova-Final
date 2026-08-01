@@ -3,10 +3,12 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
+    "start": "node server/index.js",
     "dev": "concurrently \"node server/index.js\" \"vite\"",
     "server": "node server/index.js",
     "client": "vite",
     "build": "vite build",
+    "vercel-build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {

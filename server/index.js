@@ -47,8 +47,26 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Serve built frontend static assets
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
+
+// SPA Catch-all Fallback
+app.get(/.*/, (req, res, next) => {
+  if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+    return next();
+  }
+  res.sendFile(path.join(distPath, 'index.html'), (err) => {
+    if (err) {
+      res.status(404).json({ message: "Frontend build files not found. Please run 'npm run build' first." });
+    }
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`====================================================`);
   console.log(`🚀 Scholarship Management Backend API running on port ${PORT}`);
   console.log(`====================================================`);
 });
+
+module.exports = app;
