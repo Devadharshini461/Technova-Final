@@ -151,10 +151,14 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
     return res.status(400).json({ message: 'This scholarship application deadline has expired' });
   }
 
-  // Check existing submission
-  const existingApp = db.applications.find(a => a.studentId === req.user.id && a.scholarshipId === scholarshipId);
+  // Requirement #17: Check existing active/approved submission (allow re-applying if previously rejected)
+  const existingApp = db.applications.find(a => 
+    a.studentId === req.user.id && 
+    a.scholarshipId === scholarshipId && 
+    a.status !== 'rejected'
+  );
   if (existingApp) {
-    return res.status(400).json({ message: 'You have already submitted an application for this scholarship' });
+    return res.status(400).json({ message: 'You already have an active or approved application for this scholarship scheme' });
   }
 
   // Requirement #9: Route application ONLY to assigned Staff Officer for this scheme
@@ -171,6 +175,13 @@ router.post('/', verifyToken, requireRole(['student']), upload.array('documents'
 
   const reqDocs = scheme.requiredDocuments || ['Marksheet', 'Income Certificate', 'ID Proof'];
   const uploadedFiles = req.files || [];
+
+  // Requirement #1: Verify all required documents are provided
+  if (uploadedFiles.length < reqDocs.length) {
+    return res.status(400).json({ 
+      message: `All ${reqDocs.length} required documents (${reqDocs.join(', ')}) must be uploaded before submitting.` 
+    });
+  }
 
   const documents = reqDocs.map((docType, index) => {
     const file = uploadedFiles[index];
@@ -538,6 +549,8 @@ router.patch('/:id/documents/:docId/resubmit', verifyToken, requireRole(['studen
   doc.status = 'pending';
   doc.remark = 'Resubmitted by student';
   app.status = 'under_review';
+  app.staffRecommendation = '';
+  app.staffRemarks = 'Document resubmitted by student; pending re-inspection';
   app.updatedAt = new Date().toISOString();
 
   db.auditLogs.unshift({

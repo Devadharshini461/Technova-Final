@@ -77,6 +77,39 @@
   ],
   "scholarships": [
     {
+      "id": "sch-1785566631133",
+      "title": "CGPA",
+      "provider": "BIT Sathy & Government CSR",
+      "category": "Merit-cum-Means",
+      "amount": 100000,
+      "deadline": "2026-08-19",
+      "seats": 1000,
+      "appliedCount": 1,
+      "status": "active",
+      "requiresAdminApproval": true,
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
+      "eligibilityRules": {
+        "minPercentage": 75,
+        "maxFamilyIncome": 96000,
+        "allowedCategories": [
+          "General",
+          "OBC",
+          "SC",
+          "ST",
+          "EWS"
+        ],
+        "description": "Provides financial aid for deserving BIT Sathy undergraduate students meeting academic and income thresholds."
+      },
+      "requiredDocuments": [
+        "Marksheet",
+        "Income Certificate",
+        "ID Proof",
+        "Bank Passbook Copy"
+      ],
+      "createdDate": "2026-08-01"
+    },
+    {
       "id": "sch-1785545189926",
       "title": "Technova scholarship",
       "provider": "BIT Sathy & Government CSR",
@@ -84,7 +117,7 @@
       "amount": 100000,
       "deadline": "2026-12-22",
       "seats": 1000,
-      "appliedCount": 0,
+      "appliedCount": 2,
       "status": "active",
       "requiresAdminApproval": true,
       "assignedStaffId": "u-staff-2",
@@ -117,7 +150,7 @@
       "amount": 200000,
       "deadline": "2026-10-31",
       "seats": 5000,
-      "appliedCount": 1420,
+      "appliedCount": 1421,
       "status": "active",
       "requiresAdminApproval": true,
       "assignedStaffId": "u-staff-1",
@@ -238,6 +271,308 @@
     }
   ],
   "applications": [
+    {
+      "id": "app-1785566700455",
+      "scholarshipId": "sch-1785566631133",
+      "scholarshipTitle": "CGPA",
+      "scholarshipAmount": 100000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
+      "status": "rejected",
+      "documents": [
+        {
+          "id": "doc-1785566700413-0",
+          "name": "WhatsApp Image 2026-07-30 at 10.08.41 PM.jpeg",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785566700306-991811777.jpeg",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785566700413-1",
+          "name": "Tech stack.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785566700315-798052293.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785566700413-2",
+          "name": "Admin.pdf",
+          "type": "ID Proof",
+          "fileUrl": "/uploads/documents-1785566700316-948152752.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785566700413-3",
+          "name": "staff.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785566700375-776904341.pdf",
+          "status": "pending",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": false,
+        "reasons": [
+          "Academic Marks: 88.5% meets minimum 75%",
+          "Annual Family Income: ₹1,80,000 EXCEEDS maximum limit ₹96,000",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "System Auto-Check Failed: Automatically Rejected",
+      "staffRecommendation": "recommend_reject",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-08-01T06:45:00.455Z",
+      "updatedAt": "2026-08-01T06:45:00.455Z"
+    },
+    {
+      "id": "app-1785563066816",
+      "scholarshipId": "sch-101",
+      "scholarshipTitle": "Reliance Foundation Undergraduate Scholarship 2026",
+      "scholarshipAmount": 200000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-1",
+      "assignedStaffName": "Dr. Rajesh Sharma (Verification Officer)",
+      "status": "disbursed",
+      "documents": [
+        {
+          "id": "doc-1785563066816-0",
+          "name": "student dashboard.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785563066526-727049884.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785563066816-1",
+          "name": "MODULES.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785563066591-741928895.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785563066816-2",
+          "name": "student dashboard.pdf",
+          "type": "ID Proof",
+          "fileUrl": "/uploads/documents-1785563066621-679347952.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785563066816-3",
+          "name": "MODULES.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785563066763-882766598.pdf",
+          "status": "valid",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 88.5% meets minimum 75%",
+          "Annual Family Income: ₹1,80,000 is within limit ₹2,50,000",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "",
+      "staffRecommendation": "recommend_approve",
+      "adminRemarks": "Final Executive Approval Granted",
+      "disbursementDetails": {
+        "transactionId": "TXN-BIT-1785566874433-3393",
+        "amount": 200000,
+        "disbursedDate": "2026-08-01T06:47:54.433Z",
+        "bankAccount": "309812345678",
+        "ifsc": "SBIN0001234"
+      },
+      "submittedAt": "2026-08-01T05:44:26.816Z",
+      "updatedAt": "2026-08-01T06:47:54.433Z"
+    },
+    {
+      "id": "app-1785562368110",
+      "scholarshipId": "sch-1785545189926",
+      "scholarshipTitle": "Technova scholarship",
+      "scholarshipAmount": 100000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 88.5,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee (Senior Inspector)",
+      "status": "pending_admin_approval",
+      "documents": [
+        {
+          "id": "doc-1785562368110-0",
+          "name": "student dashboard.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/document-1785562631233-678444713.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562368110-1",
+          "name": "WhatsApp Image 2026-07-30 at 10.08.41 PM.jpeg",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785562368080-878294312.jpeg",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562368110-2",
+          "name": "SUBRAMANIAN.pdf",
+          "type": "ID Proof",
+          "fileUrl": "/uploads/documents-1785562368091-491703251.pdf",
+          "status": "valid",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562368110-3",
+          "name": "AMMA.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785562368103-433709853.pdf",
+          "status": "valid",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": true,
+        "reasons": [
+          "Academic Marks: 88.5% meets minimum 75%",
+          "Annual Family Income: ₹1,80,000 is within limit ₹2,99,997",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "Document resubmitted by student; pending re-inspection",
+      "staffRecommendation": "recommend_approve",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-08-01T05:32:48.110Z",
+      "updatedAt": "2026-08-01T05:39:30.114Z"
+    },
+    {
+      "id": "app-1785562252849",
+      "scholarshipId": "sch-1785545189926",
+      "scholarshipTitle": "Technova scholarship",
+      "scholarshipAmount": 100000,
+      "requiresAdminApproval": true,
+      "studentId": "u-student-1",
+      "studentName": "Rahul Verma",
+      "studentEmail": "rahul.verma@bitsathy.ac.in",
+      "studentPhone": "+91 98765 43210",
+      "college": "Bannari Amman Institute of Technology (BIT Sathy)",
+      "course": "B.E Computer Science",
+      "year": "3rd Year",
+      "marksPercentage": 13,
+      "familyIncome": 180000,
+      "category": "OBC",
+      "bankDetails": {
+        "accountNo": "309812345678",
+        "ifscCode": "SBIN0001234",
+        "bankName": "State Bank of India",
+        "accountHolder": "Rahul Verma"
+      },
+      "assignedStaffId": "u-staff-2",
+      "assignedStaffName": "Priya Mukherjee (Senior Inspector)",
+      "status": "rejected",
+      "documents": [
+        {
+          "id": "doc-1785562252717-0",
+          "name": "staff.pdf",
+          "type": "Marksheet",
+          "fileUrl": "/uploads/documents-1785562252463-411378738.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562252717-1",
+          "name": "Tech stack.pdf",
+          "type": "Income Certificate",
+          "fileUrl": "/uploads/documents-1785562252527-454650572.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562252717-2",
+          "name": "MODULES.pdf",
+          "type": "ID Proof",
+          "fileUrl": "/uploads/documents-1785562252528-596370402.pdf",
+          "status": "pending",
+          "remark": ""
+        },
+        {
+          "id": "doc-1785562252717-3",
+          "name": "staff.pdf",
+          "type": "Bank Passbook Copy",
+          "fileUrl": "/uploads/documents-1785562252628-124898428.pdf",
+          "status": "pending",
+          "remark": ""
+        }
+      ],
+      "autoEligibilityCheck": {
+        "passed": false,
+        "reasons": [
+          "Academic Marks: 13% is BELOW minimum requirement 75%",
+          "Annual Family Income: ₹1,80,000 is within limit ₹2,99,997",
+          "Category: Applicant category (OBC) is eligible"
+        ]
+      },
+      "staffRemarks": "System Auto-Check Failed: Automatically Rejected",
+      "staffRecommendation": "recommend_reject",
+      "adminRemarks": "",
+      "disbursementDetails": null,
+      "submittedAt": "2026-08-01T05:30:52.849Z",
+      "updatedAt": "2026-08-01T05:30:52.849Z"
+    },
     {
       "id": "app-1785544477988",
       "scholarshipId": "sch-103",
@@ -442,6 +777,94 @@
   ],
   "auditLogs": [
     {
+      "id": "log-1785566874433",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "FUND_DISBURSEMENT",
+      "details": "Disbursed ₹2,00,000 to Rahul Verma for App app-1785563066816. Txn Ref: TXN-BIT-1785566874433-3393",
+      "timestamp": "2026-08-01T06:47:54.433Z"
+    },
+    {
+      "id": "log-1785566867623",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "ADMIN_APPROVE",
+      "details": "Admin approved application app-1785563066816 (Reliance Foundation Undergraduate Scholarship 2026) for Rahul Verma",
+      "timestamp": "2026-08-01T06:47:47.623Z"
+    },
+    {
+      "id": "log-1785566815890",
+      "actorName": "Dr. Rajesh Sharma (Verification Officer)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-1785563066816 (Rahul Verma). Routed status: pending_admin_approval",
+      "timestamp": "2026-08-01T06:46:55.890Z"
+    },
+    {
+      "id": "log-1785566700455",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "AUTO_CHECK_REJECT",
+      "details": "Application app-1785566700455 Auto-Rejected due to criteria mismatch: Academic Marks: 88.5% meets minimum 75%; Annual Family Income: ₹1,80,000 EXCEEDS maximum limit ₹96,000; Category: Applicant category (OBC) is eligible",
+      "timestamp": "2026-08-01T06:45:00.455Z"
+    },
+    {
+      "id": "log-1785566631133",
+      "actorName": "Superintendent Administration",
+      "actorRole": "admin",
+      "action": "SCHEME_CREATE",
+      "details": "Created scholarship scheme \"CGPA\" (Assigned to Staff: Dr. Rajesh Sharma (Verification Officer))",
+      "timestamp": "2026-08-01T06:43:51.133Z"
+    },
+    {
+      "id": "log-1785563066816",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785563066816 for \"Reliance Foundation Undergraduate Scholarship 2026\" (Assigned to Staff: Dr. Rajesh Sharma (Verification Officer))",
+      "timestamp": "2026-08-01T05:44:26.816Z"
+    },
+    {
+      "id": "log-1785562770114",
+      "actorName": "Priya Mukherjee (Senior Inspector)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended APPROVE for Application app-1785562368110 (Rahul Verma). Routed status: pending_admin_approval",
+      "timestamp": "2026-08-01T05:39:30.114Z"
+    },
+    {
+      "id": "log-1785562631309",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "DOC_RESUBMIT",
+      "details": "Re-uploaded document \"Marksheet\" for Application app-1785562368110. Application returned to Staff review queue.",
+      "timestamp": "2026-08-01T05:37:11.309Z"
+    },
+    {
+      "id": "log-1785562590851",
+      "actorName": "Priya Mukherjee (Senior Inspector)",
+      "actorRole": "staff",
+      "action": "STAFF_RECOMMEND",
+      "details": "Staff recommended REJECT for Application app-1785562368110 (Rahul Verma). Routed status: rejected",
+      "timestamp": "2026-08-01T05:36:30.851Z"
+    },
+    {
+      "id": "log-1785562368110",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "APPLICATION_SUBMIT",
+      "details": "Submitted application app-1785562368110 for \"Technova scholarship\" (Assigned to Staff: Priya Mukherjee (Senior Inspector))",
+      "timestamp": "2026-08-01T05:32:48.110Z"
+    },
+    {
+      "id": "log-1785562252849",
+      "actorName": "Rahul Verma",
+      "actorRole": "student",
+      "action": "AUTO_CHECK_REJECT",
+      "details": "Application app-1785562252849 Auto-Rejected due to criteria mismatch: Academic Marks: 13% is BELOW minimum requirement 75%; Annual Family Income: ₹1,80,000 is within limit ₹2,99,997; Category: Applicant category (OBC) is eligible",
+      "timestamp": "2026-08-01T05:30:52.849Z"
+    },
+    {
       "id": "log-1785545189926",
       "actorName": "Superintendent Administration",
       "actorRole": "admin",
@@ -500,11 +923,163 @@
   ],
   "notifications": [
     {
+      "id": "notif-1785566874433",
+      "userId": "u-student-1",
+      "title": "Funds Disbursed! 💰",
+      "message": "Scholarship grant of ₹2,00,000 has been transferred to your bank account. Txn ID: TXN-BIT-1785566874433-3393",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:47:54.433Z"
+    },
+    {
+      "id": "notif-1785566867623",
+      "userId": "u-student-1",
+      "title": "Scholarship Approved! 🎉",
+      "message": "Congratulations! Your scholarship application app-1785563066816 for Reliance Foundation Undergraduate Scholarship 2026 has received final Admin Approval!",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:47:47.623Z"
+    },
+    {
+      "id": "notif-1785566815890",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785563066816. Status updated to: pending admin_approval.",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:46:55.890Z"
+    },
+    {
+      "id": "notif-1785566700455",
+      "userId": "u-student-1",
+      "title": "Application Rejected (Auto-Eligibility Check)",
+      "message": "Your application (app-1785566700455) for CGPA was automatically rejected because criteria were not met: Annual Family Income: ₹1,80,000 EXCEEDS maximum limit ₹96,000",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:45:00.455Z"
+    },
+    {
+      "id": "notif-1785566280923",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785563066816 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:38:00.923Z"
+    },
+    {
+      "id": "notif-1785566156015",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:35:56.015Z"
+    },
+    {
+      "id": "notif-1785565387230",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:23:07.230Z"
+    },
+    {
+      "id": "notif-1785565323779",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785563066816 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:22:03.779Z"
+    },
+    {
+      "id": "notif-1785565066796",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:17:46.796Z"
+    },
+    {
+      "id": "notif-1785565045637",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"ID Proof\" in application app-1785563066816 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:17:25.637Z"
+    },
+    {
+      "id": "notif-1785564942071",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"ID Proof\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T06:15:42.071Z"
+    },
+    {
+      "id": "notif-1785563973634",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:59:33.634Z"
+    },
+    {
+      "id": "notif-1785563959566",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Income Certificate\" in application app-1785563066816 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:59:19.566Z"
+    },
+    {
+      "id": "notif-1785563066816",
+      "userId": "u-student-1",
+      "title": "Application Submitted Successfully",
+      "message": "Your application (app-1785563066816) for Reliance Foundation Undergraduate Scholarship 2026 was received and assigned to Dr. Rajesh Sharma (Verification Officer) for document verification.",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:44:26.816Z"
+    },
+    {
+      "id": "notif-1785562770114",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Priya Mukherjee (Senior Inspector) finished verifying application app-1785562368110. Status updated to: pending admin_approval.",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:39:30.114Z"
+    },
+    {
+      "id": "notif-1785562590851",
+      "userId": "u-student-1",
+      "title": "Verification Status Updated",
+      "message": "Staff officer Priya Mukherjee (Senior Inspector) finished verifying application app-1785562368110. Status updated to: rejected.",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:36:30.851Z"
+    },
+    {
+      "id": "notif-1785562502450",
+      "userId": "u-student-1",
+      "title": "Action Required: Document Flagged",
+      "message": "Your document \"Marksheet\" in application app-1785562368110 was marked as needs resubmission. Remark: \"Please re-upload standard clear copy\"",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:35:02.450Z"
+    },
+    {
+      "id": "notif-1785562368110",
+      "userId": "u-student-1",
+      "title": "Application Submitted Successfully",
+      "message": "Your application (app-1785562368110) for Technova scholarship was received and assigned to Priya Mukherjee (Senior Inspector) for document verification.",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:32:48.110Z"
+    },
+    {
+      "id": "notif-1785562252849",
+      "userId": "u-student-1",
+      "title": "Application Rejected (Auto-Eligibility Check)",
+      "message": "Your application (app-1785562252849) for Technova scholarship was automatically rejected because criteria were not met: Academic Marks: 13% is BELOW minimum requirement 75%",
+      "isRead": true,
+      "createdAt": "2026-08-01T05:30:52.849Z"
+    },
+    {
       "id": "notif-1785544526287",
       "userId": "u-student-1",
       "title": "Verification Status Updated",
       "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-1785544477988. Status updated to: rejected.",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:35:26.287Z"
     },
     {
@@ -512,7 +1087,7 @@
       "userId": "u-student-1",
       "title": "Application Rejected (Auto-Eligibility Check)",
       "message": "Your application (app-1785544477988) for Post-Matric National Merit Grant for SC/ST Students was automatically rejected because criteria were not met: Category: Applicant category (OBC) NOT eligible (Allowed: SC, ST)",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:34:37.990Z"
     },
     {
@@ -528,7 +1103,7 @@
       "userId": "u-student-1",
       "title": "Verification Status Updated",
       "message": "Staff officer Dr. Rajesh Sharma (Verification Officer) finished verifying application app-2001. Status updated to: rejected.",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:32:30.146Z"
     },
     {
@@ -536,7 +1111,7 @@
       "userId": "u-student-1",
       "title": "Action Required: Document Flagged",
       "message": "Your document \"Bank Passbook Copy\" in application app-2001 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:27:28.063Z"
     },
     {
@@ -544,7 +1119,7 @@
       "userId": "u-student-1",
       "title": "Action Required: Document Flagged",
       "message": "Your document \"ID Proof\" in application app-2001 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:27:23.102Z"
     },
     {
@@ -552,7 +1127,7 @@
       "userId": "u-student-1",
       "title": "Action Required: Document Flagged",
       "message": "Your document \"Income Certificate\" in application app-2001 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:27:17.264Z"
     },
     {
@@ -560,7 +1135,7 @@
       "userId": "u-student-1",
       "title": "Action Required: Document Flagged",
       "message": "Your document \"Marksheet\" in application app-2001 was marked as invalid. Remark: \"Please re-upload standard clear copy\"",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-08-01T00:27:11.458Z"
     },
     {
@@ -568,7 +1143,7 @@
       "userId": "u-student-1",
       "title": "Application Submitted Successfully",
       "message": "Your application app-2001 for Reliance Foundation Undergraduate Scholarship 2026 was received and routed to assigned officer Dr. Rajesh Sharma.",
-      "isRead": false,
+      "isRead": true,
       "createdAt": "2026-07-30T00:22:55.817Z"
     }
   ]

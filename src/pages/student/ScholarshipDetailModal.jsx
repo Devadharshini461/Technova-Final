@@ -10,6 +10,7 @@ export const ScholarshipDetailModal = ({ scheme, onClose, onApply }) => {
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 to-blue-900 p-6 text-white relative">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 rounded-full transition"
           >
@@ -86,12 +87,14 @@ export const ScholarshipDetailModal = ({ scheme, onClose, onApply }) => {
         {/* Modal Footer */}
         <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-3">
           <button
+            type="button"
             onClick={onClose}
             className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-200 transition"
           >
             Close
           </button>
           <button
+            type="button"
             onClick={onApply}
             className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/25 transition flex items-center gap-1.5"
           >

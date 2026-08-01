@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
 import { GraduationCap, Lock, Mail, ArrowRight, Sparkles, ShieldCheck } from 'lucide-react';
 
 export const LoginPage = () => {
@@ -98,12 +99,6 @@ export const LoginPage = () => {
             </div>
           </div>
 
-          {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl font-medium leading-relaxed">
-              {error}
-            </div>
-          )}
-
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold text-slate-800 mb-1">
@@ -137,6 +132,9 @@ export const LoginPage = () => {
               </div>
             </div>
 
+            {/* Validation Warning immediately above Sign In button */}
+            <FormValidationBanner error={error} />
+
             <button
               type="submit"
               disabled={loading}
@@ -145,13 +143,6 @@ export const LoginPage = () => {
               {loading ? 'Authenticating...' : 'Sign In'} <ArrowRight className="w-4 h-4" />
             </button>
           </form>
-
-          <div className="text-center text-xs text-slate-500 border-t border-slate-100 pt-4">
-            Don't have a BIT Sathy student account?{' '}
-            <Link to="/register" className="font-bold text-blue-600 hover:underline">
-              Register Here
-            </Link>
-          </div>
         </div>
 
       </div>

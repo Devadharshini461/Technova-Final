@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { UserPlus, Trash2, Mail, Phone, X } from 'lucide-react';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
+import { UserPlus, Edit, Trash2, Mail, Phone, X } from 'lucide-react';
 
 export const StaffManagement = () => {
   const [staffList, setStaffList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [editingStaff, setEditingStaff] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: 'password123',
+    password: '',
     phone: '',
     department: 'Document Verification Cell'
   });
@@ -31,24 +33,58 @@ export const StaffManagement = () => {
     }
   };
 
-  const handleAddStaff = async (e) => {
+  const handleOpenCreate = () => {
+    setEditingStaff(null);
+    setFormData({
+      name: '',
+      email: '',
+      password: 'password123',
+      phone: '',
+      department: 'Document Verification Cell'
+    });
+    setError('');
+    setShowModal(true);
+  };
+
+  const handleOpenEdit = (staff) => {
+    setEditingStaff(staff);
+    // Extract raw 10 digits from stored phone for display in input
+    const rawPhone = staff.phone ? staff.phone.replace(/\D/g, '').slice(-10) : '';
+    setFormData({
+      name: staff.name,
+      email: staff.email,
+      password: '',
+      phone: rawPhone,
+      department: staff.department || 'Document Verification Cell'
+    });
+    setError('');
+    setShowModal(true);
+  };
+
+  const handleSaveStaff = async (e) => {
     e.preventDefault();
     setError('');
 
+    // Requirement #9: Phone number validation - must be 10 digits
+    if (formData.phone) {
+      const digits = formData.phone.replace(/\D/g, '');
+      if (digits.length !== 10) {
+        setError('Phone number must contain exactly 10 digits!');
+        return;
+      }
+    }
+
     try {
-      const res = await axios.post('/api/staff', formData);
-      // In-place state update: append new staff without page refresh
-      setStaffList(prev => [...prev, res.data]);
+      if (editingStaff) {
+        const res = await axios.put(`/api/staff/${editingStaff.id}`, formData);
+        setStaffList(prev => prev.map(s => s.id === res.data.id ? { ...s, ...res.data } : s));
+      } else {
+        const res = await axios.post('/api/staff', formData);
+        setStaffList(prev => [...prev, res.data]);
+      }
       setShowModal(false);
-      setFormData({
-        name: '',
-        email: '',
-        password: 'password123',
-        phone: '',
-        department: 'Document Verification Cell'
-      });
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to add staff account');
+      setError(err.response?.data?.message || 'Failed to save staff account');
     }
   };
 
@@ -57,7 +93,6 @@ export const StaffManagement = () => {
     if (window.confirm(`Are you sure you want to remove staff account "${name}"?`)) {
       try {
         await axios.delete(`/api/staff/${id}`);
-        // In-place state update: remove staff without page refresh or scroll reset
         setStaffList(prev => prev.filter(s => s.id !== id));
       } catch (err) {
         alert(err.response?.data?.message || 'Failed to delete staff account');
@@ -75,7 +110,7 @@ export const StaffManagement = () => {
 
         <button
           type="button"
-          onClick={() => setShowModal(true)}
+          onClick={handleOpenCreate}
           className="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-600/20 transition flex items-center gap-1.5"
         >
           <UserPlus className="w-4 h-4" /> Add New Verification Officer
@@ -124,13 +159,21 @@ export const StaffManagement = () => {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-end">
+              {/* Requirement #10: Edit Staff alongside Remove Staff */}
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleOpenEdit(s)}
+                  className="px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition flex items-center gap-1"
+                >
+                  <Edit className="w-3.5 h-3.5" /> Edit Staff
+                </button>
                 <button
                   type="button"
                   onClick={(e) => handleRemoveStaff(s.id, s.name, e)}
                   className="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold transition flex items-center gap-1"
                 >
-                  <Trash2 className="w-3.5 h-3.5" /> Remove Staff
+                  <Trash2 className="w-3.5 h-3.5" /> Remove
                 </button>
               </div>
             </div>
@@ -143,19 +186,15 @@ export const StaffManagement = () => {
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200 space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-base font-bold text-slate-900">Add New Verification Officer</h3>
+              <h3 className="text-base font-bold text-slate-900">
+                {editingStaff ? 'Edit Verification Officer' : 'Add New Verification Officer'}
+              </h3>
               <button type="button" onClick={() => setShowModal(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleAddStaff} className="space-y-3 text-xs">
+            <form onSubmit={handleSaveStaff} className="space-y-3 text-xs">
               <div>
                 <label className="block font-bold text-slate-800 mb-1">Full Name</label>
                 <input
@@ -181,26 +220,58 @@ export const StaffManagement = () => {
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Password</label>
+                <label className="block font-bold text-slate-800 mb-1">
+                  Department
+                </label>
                 <input
                   type="text"
-                  required
-                  value={formData.password}
-                  onChange={e => setFormData({ ...formData, password: e.target.value })}
+                  value={formData.department}
+                  onChange={e => setFormData({ ...formData, department: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  placeholder="Document Verification Cell"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-800 mb-1">Phone Number</label>
+                <label className="block font-bold text-slate-800 mb-1">
+                  {editingStaff ? 'Password (Leave blank to keep unchanged)' : 'Password'}
+                </label>
                 <input
                   type="text"
-                  value={formData.phone}
-                  onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                  required={!editingStaff}
+                  value={formData.password}
+                  onChange={e => setFormData({ ...formData, password: e.target.value })}
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  placeholder="+91 98765 43210"
+                  placeholder="••••••••"
                 />
               </div>
+
+              {/* Requirement #9: 10-digit phone number input with default +91 prefix */}
+              <div>
+                <label className="block font-bold text-slate-800 mb-1">
+                  10-Digit Mobile Number (+91 default added)
+                </label>
+                <div className="flex items-center">
+                  <span className="px-3 py-2 bg-slate-100 border border-r-0 border-slate-200 rounded-l-xl text-slate-600 font-bold text-xs">
+                    +91
+                  </span>
+                  <input
+                    type="text"
+                    maxLength="10"
+                    value={formData.phone}
+                    onChange={e => {
+                      const val = e.target.value.replace(/\D/g, '');
+                      setFormData({ ...formData, phone: val });
+                    }}
+                    className="w-full px-3 py-2 rounded-r-xl border border-slate-200 focus:ring-2 focus:ring-blue-500 focus:outline-none font-mono"
+                    placeholder="9876543210"
+                  />
+                </div>
+                <span className="text-[10px] text-slate-400 mt-0.5 block">Must be exactly 10 digits</span>
+              </div>
+
+              {/* Requirement #3: Validation error banner immediately above Cancel/Submit */}
+              <FormValidationBanner error={error} />
 
               <div className="pt-2 flex justify-end gap-2">
                 <button
@@ -214,7 +285,7 @@ export const StaffManagement = () => {
                   type="submit"
                   className="px-5 py-2 rounded-xl bg-blue-600 text-white font-bold hover:bg-blue-500 shadow-md shadow-blue-600/20"
                 >
-                  Create Staff Account
+                  {editingStaff ? 'Update Staff Account' : 'Create Staff Account'}
                 </button>
               </div>
             </form>

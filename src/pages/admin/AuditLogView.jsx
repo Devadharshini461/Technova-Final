@@ -35,6 +35,7 @@ export const AuditLogView = () => {
         </div>
 
         <button
+          type="button"
           onClick={fetchLogs}
           className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center gap-1.5"
         >
@@ -59,6 +60,7 @@ export const AuditLogView = () => {
           <span className="text-xs text-slate-500 font-semibold">Filter Role:</span>
           {['', 'admin', 'staff', 'student'].map((r) => (
             <button
+              type="button"
               key={r}
               onClick={() => setRoleFilter(r)}
               className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition ${

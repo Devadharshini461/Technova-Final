@@ -38,6 +38,7 @@ export const StudentReports = () => {
         </div>
 
         <button
+          type="button"
           onClick={fetchStudentReports}
           className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition flex items-center gap-1.5"
         >

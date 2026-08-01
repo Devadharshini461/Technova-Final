@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { 
   Award, FileText, CheckSquare, Layers, Users, 
-  BarChart3, Clock, Sparkles, UserCheck, ShieldAlert 
+  BarChart3, Clock, Sparkles, UserCheck, ShieldAlert, GraduationCap 
 } from 'lucide-react';
 
 export const Sidebar = ({ isCollapsed }) => {
@@ -30,6 +30,7 @@ export const Sidebar = ({ isCollapsed }) => {
       { to: '/admin', icon: Layers, label: 'Scheme Management', end: true },
       { to: '/admin/approvals', icon: ShieldAlert, label: 'Approval Queue' },
       { to: '/admin/staff-mgmt', icon: UserCheck, label: 'Staff Allotment' },
+      { to: '/admin/student-mgmt', icon: GraduationCap, label: 'Student Management' },
       { to: '/admin/student-reports', icon: Users, label: 'Student Reports' },
       { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
       { to: '/admin/audit-logs', icon: FileText, label: 'Audit Logs' }

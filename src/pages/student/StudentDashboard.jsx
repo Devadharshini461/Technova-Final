@@ -59,7 +59,7 @@ export const StudentDashboard = () => {
           </div>
 
           <Link
-            to="/scholarships"
+            to="/student"
             className="px-5 py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-lg shadow-blue-500/25 transition flex items-center gap-2"
           >
             <Sparkles className="w-4 h-4" /> Explore New Grants <ArrowRight className="w-4 h-4" />
@@ -117,7 +117,7 @@ export const StudentDashboard = () => {
                 Browse our active scholarship catalog and submit your first application to begin receiving financial assistance.
               </p>
               <Link
-                to="/scholarships"
+                to="/student"
                 className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 transition shadow-md"
               >
                 Browse Scholarships Catalog
@@ -208,13 +208,15 @@ export const StudentDashboard = () => {
                             )}
                           </div>
 
-                          {(doc.status === 'invalid' || doc.status === 'needs_resubmission') && (
+                          {/* Requirement #7: ONLY display Re-upload Document button if staff flagged for resubmission (needs_resubmission). DO NOT display if marked invalid. */}
+                          {doc.status === 'needs_resubmission' && (
                             <button
+                              type="button"
                               onClick={() => {
                                 setActiveAppForResubmit(app);
                                 setResubmittingDoc(doc);
                               }}
-                              className="w-full mt-2 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-[11px] font-bold shadow transition"
+                              className="w-full mt-2 py-1.5 bg-amber-600 hover:bg-amber-500 text-white rounded-xl text-[11px] font-bold shadow transition"
                             >
                               Re-upload Document
                             </button>

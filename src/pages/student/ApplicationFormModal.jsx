@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../context/AuthContext';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
 import { X, Upload, CheckCircle2, FileText, AlertCircle, Building, User, CreditCard } from 'lucide-react';
 
 export const ApplicationFormModal = ({ scheme, onClose, onSuccess }) => {
@@ -34,8 +35,16 @@ export const ApplicationFormModal = ({ scheme, onClose, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    // Requirement #1: Verify that EVERY required document is uploaded
+    const missingDocs = scheme.requiredDocuments.filter(docType => !files[docType]);
+    if (missingDocs.length > 0) {
+      setError(`Cannot submit! Please upload all required documents: missing ${missingDocs.join(', ')}`);
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const data = new FormData();
@@ -78,6 +87,7 @@ export const ApplicationFormModal = ({ scheme, onClose, onSuccess }) => {
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 p-6 text-white relative">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white bg-slate-800/50 hover:bg-slate-800 rounded-full transition"
           >
@@ -92,13 +102,6 @@ export const ApplicationFormModal = ({ scheme, onClose, onSuccess }) => {
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-          {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
-              <span>{error}</span>
-            </div>
-          )}
-
           {/* Section 1: Academic & Institutional Info */}
           <div>
             <h3 className="text-sm font-bold text-slate-900 mb-3 flex items-center gap-2 border-b border-slate-100 pb-2">
@@ -259,6 +262,9 @@ export const ApplicationFormModal = ({ scheme, onClose, onSuccess }) => {
               ))}
             </div>
           </div>
+
+          {/* Requirement #3: Reusable Validation Warning immediately above Cancel/Submit buttons */}
+          <FormValidationBanner error={error} />
 
           {/* Footer Submit Button */}
           <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3">

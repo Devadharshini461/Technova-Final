@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Shield, Phone, Mail, HelpCircle, GraduationCap } from 'lucide-react';
 
 export const Footer = () => {
@@ -9,20 +10,20 @@ export const Footer = () => {
           <div>
             <div className="flex items-center gap-2 text-white font-bold text-base mb-3">
               <GraduationCap className="w-5 h-5 text-blue-400" />
-              ScholarPortal.gov
+              ScholarPortal.bitsathy
             </div>
             <p className="text-slate-400 leading-relaxed">
-              India's premier digital scholarship verification and fund disbursement engine modeled after Buddy4Study standards.
+              BIT Sathy single sign-on scholarship verification and direct benefit transfer (DBT) engine.
             </p>
           </div>
 
           <div>
             <h4 className="text-slate-200 font-bold mb-3 uppercase tracking-wider text-[11px]">Portal Quick Links</h4>
             <ul className="space-y-2">
-              <li><a href="/scholarships" className="hover:text-white transition">Browse All Schemes</a></li>
-              <li><a href="/student" className="hover:text-white transition">Track Application Status</a></li>
-              <li><a href="/login" className="hover:text-white transition">Institutional Staff Login</a></li>
-              <li><a href="/admin" className="hover:text-white transition">Department Governance</a></li>
+              <li><Link to="/student" className="hover:text-white transition">Browse All Schemes</Link></li>
+              <li><Link to="/student/my-applications" className="hover:text-white transition">Track Application Status</Link></li>
+              <li><Link to="/login" className="hover:text-white transition">Institutional Staff Login</Link></li>
+              <li><Link to="/admin" className="hover:text-white transition">Department Governance</Link></li>
             </ul>
           </div>
 

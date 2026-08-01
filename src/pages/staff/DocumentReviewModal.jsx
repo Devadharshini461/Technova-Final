@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
 import { 
   X, CheckCircle2, XCircle, AlertTriangle, FileText, Eye, 
   ThumbsUp, ThumbsDown, User, ExternalLink 
@@ -14,7 +15,10 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
   const [error, setError] = useState('');
 
   const handleVerifyDoc = async (docId, status, e) => {
-    if (e) e.preventDefault();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     try {
       const remark = docRemarks[docId] || '';
       const res = await axios.patch(`/api/applications/${appData.id}/documents/${docId}`, {
@@ -25,7 +29,9 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
       if (onUpdateDoc) onUpdateDoc(res.data);
 
       const updatedDoc = res.data.documents.find(d => d.id === docId);
-      if (updatedDoc) setSelectedDoc(updatedDoc);
+      if (updatedDoc) {
+        setSelectedDoc(prev => (prev && prev.id === docId ? { ...prev, status: updatedDoc.status, remark: updatedDoc.remark } : updatedDoc));
+      }
     } catch (err) {
       console.error(err);
       setError('Failed to update document status');
@@ -289,6 +295,7 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
                     {isPdfDoc(selectedDoc) ? (
                       <div className="w-full h-full flex flex-col items-center">
                         <iframe
+                          key={selectedDoc.id || selectedDoc.fileUrl}
                           src={selectedDoc.fileUrl}
                           className="w-full h-[320px] rounded-xl border border-slate-800 bg-white"
                           title={selectedDoc.name}
@@ -326,11 +333,7 @@ export const DocumentReviewModal = ({ application, onClose, onUpdateDoc, onSucce
 
             {/* Bottom Recommendation Actions */}
             <div className="pt-6 border-t border-slate-800 mt-6 space-y-3">
-              {error && (
-                <div className="p-2.5 bg-rose-950/80 border border-rose-800 text-rose-200 text-xs rounded-xl">
-                  {error}
-                </div>
-              )}
+              <FormValidationBanner error={error} />
 
               {!allDocsValid && (
                 <div className="p-2.5 bg-amber-950/70 border border-amber-800 text-amber-200 text-[11px] rounded-xl flex items-center gap-2">

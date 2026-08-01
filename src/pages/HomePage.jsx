@@ -53,7 +53,7 @@ export const HomePage = () => {
             {/* Quick Hero Actions */}
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
-                to="/scholarships"
+                to="/student"
                 className="px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm shadow-xl shadow-blue-500/25 transition flex items-center gap-2"
               >
                 Browse All Scholarships <ArrowRight className="w-4 h-4" />
@@ -154,7 +154,7 @@ export const HomePage = () => {
             <p className="text-xs text-slate-500 mt-1">Top government and corporate CSR sponsored grants currently accepting applications.</p>
           </div>
           <Link
-            to="/scholarships"
+            to="/student"
             className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
           >
             View All Programs <ChevronRight className="w-4 h-4" />
@@ -186,7 +186,7 @@ export const HomePage = () => {
               </div>
 
               <Link
-                to="/scholarships"
+                to="/student"
                 className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs text-center transition block shadow-md shadow-blue-500/20"
               >
                 Apply Now

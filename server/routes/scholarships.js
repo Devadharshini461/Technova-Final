@@ -58,6 +58,12 @@ router.post('/', verifyToken, requireRole(['admin']), (req, res) => {
     return res.status(400).json({ message: 'Title, amount, and deadline are required' });
   }
 
+  // Requirement #6: Validate deadline date is not in the past
+  const todayStr = new Date().toISOString().split('T')[0];
+  if (deadline < todayStr) {
+    return res.status(400).json({ message: 'Invalid deadline date! Deadline cannot be in the past.' });
+  }
+
   const db = readDB();
   let assignedStaffName = 'Unassigned';
   if (assignedStaffId) {
@@ -120,6 +126,14 @@ router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
     requiredDocuments, requiresAdminApproval, assignedStaffId 
   } = req.body;
 
+  // Requirement #6: Validate deadline date if updating
+  if (deadline) {
+    const todayStr = new Date().toISOString().split('T')[0];
+    if (deadline < todayStr) {
+      return res.status(400).json({ message: 'Invalid deadline date! Deadline cannot be in the past.' });
+    }
+  }
+
   let assignedStaffName = existing.assignedStaffName || 'Unassigned';
   if (assignedStaffId !== undefined) {
     const staffUser = db.users.find(u => u.id === assignedStaffId);
@@ -164,6 +178,31 @@ router.put('/:id', verifyToken, requireRole(['admin']), (req, res) => {
   res.json(updatedScheme);
 });
 
+// PATCH /api/scholarships/:id/toggle-status - Open/Close scheme toggle (Requirement #5)
+router.patch('/:id/toggle-status', verifyToken, requireRole(['admin']), (req, res) => {
+  const db = readDB();
+  const scheme = db.scholarships.find(s => s.id === req.params.id);
+
+  if (!scheme) {
+    return res.status(404).json({ message: 'Scholarship scheme not found' });
+  }
+
+  const newStatus = scheme.status === 'active' ? 'closed' : 'active';
+  scheme.status = newStatus;
+
+  db.auditLogs.unshift({
+    id: `log-${Date.now()}`,
+    actorName: req.user.name,
+    actorRole: req.user.role,
+    action: newStatus === 'closed' ? 'SCHEME_CLOSE' : 'SCHEME_OPEN',
+    details: `${newStatus === 'closed' ? 'Closed' : 'Re-opened'} scholarship scheme "${scheme.title}"`,
+    timestamp: new Date().toISOString()
+  });
+
+  writeDB(db);
+  res.json(scheme);
+});
+
 // PATCH /api/scholarships/:id/close - Close scheme (Admin only)
 router.patch('/:id/close', verifyToken, requireRole(['admin']), (req, res) => {
   const db = readDB();
@@ -186,6 +225,30 @@ router.patch('/:id/close', verifyToken, requireRole(['admin']), (req, res) => {
 
   writeDB(db);
   res.json(scheme);
+});
+
+// DELETE /api/scholarships/:id - Delete scholarship scheme (Requirement #16)
+router.delete('/:id', verifyToken, requireRole(['admin']), (req, res) => {
+  const db = readDB();
+  const index = db.scholarships.findIndex(s => s.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Scholarship scheme not found' });
+  }
+
+  const removed = db.scholarships.splice(index, 1)[0];
+
+  db.auditLogs.unshift({
+    id: `log-${Date.now()}`,
+    actorName: req.user.name,
+    actorRole: req.user.role,
+    action: 'SCHEME_DELETE',
+    details: `Deleted scholarship scheme "${removed.title}"`,
+    timestamp: new Date().toISOString()
+  });
+
+  writeDB(db);
+  res.json({ message: 'Scholarship scheme deleted successfully', scheme: removed });
 });
 
 module.exports = router;

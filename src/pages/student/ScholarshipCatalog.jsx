@@ -8,6 +8,7 @@ import { ApplicationFormModal } from './ApplicationFormModal';
 export const ScholarshipCatalog = () => {
   const { user } = useContext(AuthContext);
   const [scholarships, setScholarships] = useState([]);
+  const [myApplications, setMyApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -23,10 +24,12 @@ export const ScholarshipCatalog = () => {
   const fetchScholarships = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('/api/scholarships', {
-        params: { status: 'active', category: selectedCategory, search }
-      });
-      setScholarships(res.data);
+      const [schRes, appsRes] = await Promise.all([
+        axios.get('/api/scholarships', { params: { status: 'active', category: selectedCategory, search } }),
+        user?.role === 'student' ? axios.get('/api/applications/my') : Promise.resolve({ data: [] })
+      ]);
+      setScholarships(schRes.data);
+      setMyApplications(appsRes.data);
     } catch (err) {
       console.error(err);
     } finally {
@@ -71,6 +74,7 @@ export const ScholarshipCatalog = () => {
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
             {categories.map((cat) => (
               <button
+                type="button"
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
@@ -96,72 +100,90 @@ export const ScholarshipCatalog = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {scholarships.map((scheme) => (
-              <div
-                key={scheme.id}
-                className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group"
-              >
-                <div className="p-6">
-                  {/* Category & Status */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
-                      {scheme.category}
-                    </span>
-                    <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" /> Deadline: {scheme.deadline}
-                    </span>
+            {scholarships.map((scheme) => {
+              // Requirement #17: Check student application history for this scheme
+              const existingApp = myApplications.find(a => a.scholarshipId === scheme.id);
+              const isApprovedOrActive = existingApp && existingApp.status !== 'rejected';
+              const isRejected = existingApp && existingApp.status === 'rejected';
+
+              return (
+                <div
+                  key={scheme.id}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between overflow-hidden group"
+                >
+                  <div className="p-6">
+                    {/* Category & Status */}
+                    <div className="flex items-center justify-between gap-2 mb-3">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-100">
+                        {scheme.category}
+                      </span>
+                      <span className="text-xs text-slate-400 flex items-center gap-1 font-medium">
+                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Deadline: {scheme.deadline}
+                      </span>
+                    </div>
+
+                    {/* Title & Provider */}
+                    <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition mb-1 leading-snug line-clamp-2">
+                      {scheme.title}
+                    </h3>
+                    <div className="text-xs text-slate-500 flex items-center gap-1 mb-4">
+                      <Building2 className="w-3.5 h-3.5 text-slate-400" /> {scheme.provider}
+                    </div>
+
+                    {/* Grant Amount Card */}
+                    <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-xl p-3 border border-slate-100 mb-4 flex items-center justify-between">
+                      <div>
+                        <div className="text-[10px] text-slate-500 uppercase font-semibold">Award Financial Aid</div>
+                        <div className="text-xl font-extrabold text-blue-700">₹{scheme.amount.toLocaleString()} <span className="text-xs font-normal text-slate-500">/ year</span></div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-[10px] text-slate-500 font-semibold">Total Seats</div>
+                        <div className="text-xs font-bold text-slate-800">{scheme.seats.toLocaleString()} Seats</div>
+                      </div>
+                    </div>
+
+                    {/* Key Criteria Summary */}
+                    <div className="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                        <span>Min Marks: <strong className="text-slate-800">{scheme.eligibilityRules.minPercentage}%</strong></span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                        <span>Max Income: <strong className="text-slate-800">₹{scheme.eligibilityRules.maxFamilyIncome.toLocaleString()}</strong></span>
+                      </div>
+                    </div>
                   </div>
 
-                  {/* Title & Provider */}
-                  <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition mb-1 leading-snug line-clamp-2">
-                    {scheme.title}
-                  </h3>
-                  <div className="text-xs text-slate-500 flex items-center gap-1 mb-4">
-                    <Building2 className="w-3.5 h-3.5 text-slate-400" /> {scheme.provider}
-                  </div>
-
-                  {/* Grant Amount Card */}
-                  <div className="bg-gradient-to-r from-slate-50 to-blue-50/40 rounded-xl p-3 border border-slate-100 mb-4 flex items-center justify-between">
-                    <div>
-                      <div className="text-[10px] text-slate-500 uppercase font-semibold">Award Financial Aid</div>
-                      <div className="text-xl font-extrabold text-blue-700">₹{scheme.amount.toLocaleString()} <span className="text-xs font-normal text-slate-500">/ year</span></div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-[10px] text-slate-500 font-semibold">Total Seats</div>
-                      <div className="text-xs font-bold text-slate-800">{scheme.seats.toLocaleString()} Seats</div>
-                    </div>
-                  </div>
-
-                  {/* Key Criteria Summary */}
-                  <div className="space-y-1.5 text-xs text-slate-600 border-t border-slate-100 pt-3">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span>Min Marks: <strong className="text-slate-800">{scheme.eligibilityRules.minPercentage}%</strong></span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                      <span>Max Income: <strong className="text-slate-800">₹{scheme.eligibilityRules.maxFamilyIncome.toLocaleString()}</strong></span>
-                    </div>
+                  {/* Footer Buttons (Requirement #17) */}
+                  <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedScheme(scheme)}
+                      className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition"
+                    >
+                      View Details
+                    </button>
+                    
+                    {/* Requirement #17: If application was rejected, allow applicant to reapply */}
+                    <button
+                      type="button"
+                      disabled={isApprovedOrActive}
+                      onClick={() => setApplyingScheme(scheme)}
+                      className={`flex-1 px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-center gap-1 ${
+                        isApprovedOrActive
+                          ? 'bg-slate-200 text-slate-500 cursor-not-allowed border border-slate-300'
+                          : isRejected
+                          ? 'bg-amber-600 hover:bg-amber-500 text-white shadow-md shadow-amber-600/20 cursor-pointer'
+                          : 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 cursor-pointer'
+                      }`}
+                    >
+                      {isApprovedOrActive ? 'Application Submitted' : isRejected ? 'Re-Apply Now' : 'Apply Now'} {!isApprovedOrActive && <ChevronRight className="w-3.5 h-3.5" />}
+                    </button>
                   </div>
                 </div>
-
-                {/* Footer Buttons */}
-                <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center gap-2">
-                  <button
-                    onClick={() => setSelectedScheme(scheme)}
-                    className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-100 transition"
-                  >
-                    View Details
-                  </button>
-                  <button
-                    onClick={() => setApplyingScheme(scheme)}
-                    className="flex-1 px-3 py-2 rounded-xl text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-1"
-                  >
-                    Apply Now <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

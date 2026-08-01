@@ -5,6 +5,7 @@ import { SchemeManagement } from './SchemeManagement';
 import { ApprovalQueue } from './ApprovalQueue';
 import { StaffManagement } from './StaffManagement';
 import { StudentReports } from './StudentReports';
+import { StudentManagement } from './StudentManagement';
 import { AnalyticsView } from './AnalyticsView';
 import { AuditLogView } from './AuditLogView';
 import { Shield, Plus, CheckSquare } from 'lucide-react';
@@ -46,18 +47,13 @@ export const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* 
-        NO Horizontal Tab Navigation Bar (REMOVED).
-        Navigation is exclusively handled via the left vertical sidebar (Sidebar.jsx)
-        connected to React Router routes below.
-      */}
-
       {/* Nested React Router Routes for Admin Pages */}
       <div>
         <Routes>
           <Route index element={<SchemeManagement />} />
           <Route path="approvals" element={<ApprovalQueue />} />
           <Route path="staff-mgmt" element={<StaffManagement />} />
+          <Route path="student-mgmt" element={<StudentManagement />} />
           <Route path="student-reports" element={<StudentReports />} />
           <Route path="analytics" element={<AnalyticsView />} />
           <Route path="audit-logs" element={<AuditLogView />} />

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
 import { X, Upload, AlertTriangle, FileText } from 'lucide-react';
 
 export const ResubmissionModal = ({ application, docToResubmit, onClose, onSuccess }) => {
@@ -38,6 +39,7 @@ export const ResubmissionModal = ({ application, docToResubmit, onClose, onSucce
       <div className="bg-white rounded-3xl max-w-md w-full overflow-hidden shadow-2xl border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
         <div className="bg-gradient-to-r from-amber-600 to-orange-600 p-5 text-white relative">
           <button
+            type="button"
             onClick={onClose}
             className="absolute top-4 right-4 p-2 text-white/80 hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition"
           >
@@ -51,12 +53,6 @@ export const ResubmissionModal = ({ application, docToResubmit, onClose, onSucce
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
-              {error}
-            </div>
-          )}
-
           <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900">
             <div className="font-bold mb-0.5">Verifier Staff Remark:</div>
             <div>"{docToResubmit.remark || 'Document unreadable or invalid format'}"</div>
@@ -66,7 +62,10 @@ export const ResubmissionModal = ({ application, docToResubmit, onClose, onSucce
             <label className="block text-xs font-bold text-slate-800 mb-1">
               Re-upload Document ({docToResubmit.type})
             </label>
-            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50 hover:bg-slate-100/80 transition cursor-pointer">
+            <label 
+              htmlFor="resubmit-file-input"
+              className="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50 hover:bg-slate-100/80 transition cursor-pointer block"
+            >
               <Upload className="w-8 h-8 text-blue-600 mx-auto mb-2" />
               <div className="text-xs font-semibold text-slate-700">
                 {file ? file.name : 'Click to browse new file copy'}
@@ -75,18 +74,22 @@ export const ResubmissionModal = ({ application, docToResubmit, onClose, onSucce
               <input
                 type="file"
                 accept=".pdf,.png,.jpg,.jpeg"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    setFile(e.target.files[0]);
+                  }
+                }}
                 className="hidden"
                 id="resubmit-file-input"
               />
-              <label
-                htmlFor="resubmit-file-input"
-                className="mt-3 inline-block px-4 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-500 transition cursor-pointer"
-              >
-                Select File
-              </label>
-            </div>
+              <span className="mt-3 inline-block px-4 py-1.5 rounded-xl bg-blue-600 text-white text-xs font-semibold shadow-sm hover:bg-blue-500 transition">
+                {file ? 'Change File' : 'Select File'}
+              </span>
+            </label>
           </div>
+
+          {/* Validation Warning immediately above Cancel/Submit buttons */}
+          <FormValidationBanner error={error} />
 
           <div className="pt-2 flex items-center justify-end gap-2">
             <button

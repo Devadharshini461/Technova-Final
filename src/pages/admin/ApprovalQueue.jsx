@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { StatusBadge } from '../../components/StatusBadge';
+import { FormValidationBanner } from '../../components/FormValidationBanner';
 import { 
   CheckCircle2, XCircle, ShieldAlert, DollarSign, RefreshCw, 
   Shield, MessageSquare, ArrowDown, Sparkles 
@@ -258,12 +259,6 @@ export const ApprovalQueue = () => {
               Overriding application <strong className="text-slate-900">{overrideApp.id}</strong> ({overrideApp.studentName}). Every override action is permanently recorded in system audit logs with mandatory justification.
             </p>
 
-            {error && (
-              <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 text-xs rounded-xl">
-                {error}
-              </div>
-            )}
-
             <form onSubmit={handleSubmitOverride} className="space-y-4 text-xs">
               <div>
                 <label className="block font-bold text-slate-800 mb-1">Target Override Status</label>
@@ -288,6 +283,9 @@ export const ApprovalQueue = () => {
                   className="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-amber-500 focus:outline-none"
                 />
               </div>
+
+              {/* Requirement #3: Validation error banner immediately above Cancel/Submit */}
+              <FormValidationBanner error={error} />
 
               <div className="pt-2 flex justify-end gap-2">
                 <button
